@@ -1,0 +1,7 @@
+formal_label,model_id,spec_id,term,n,coef,se,pvalue,stars,coef_display,or_display,notes,built_at
+D3,e1b_indirect_peripheral,peripheral_p80,peripheral,17067,0.8618796859155086,0.3901654930352088,0.0271739078963764,*,0.862* (0.390),2.37*,peripheral = verified==0 & followers<p80 (77287); n_peripheral=10720,2026-07-05T11:16:20.452748+00:00
+D3,e1b_indirect_peripheral,peripheral_p90,peripheral,17067,1.2455706996653582,1.0420516340768944,0.2319674480052826,,1.246 (1.042),3.47,peripheral = verified==0 & followers<p90 (679972); n_peripheral=10877,2026-07-05T11:16:20.452748+00:00
+D3,e1b_indirect_peripheral,peripheral_p95,peripheral,17067,18.96378147039186,,,,18.964 (nan),172133598.78,peripheral = verified==0 & followers<p95 (1967472); n_peripheral=10924,2026-07-05T11:16:20.452748+00:00
+H1,h1_engagement_indirect,peripheral_p80,indirect_clean,10650,0.1264885022321682,0.0293075284468304,1.5895048805170598e-05,***,0.126*** (0.029),,peripheral = verified==0 & followers<p80 (77287); n_peripheral=10720,2026-07-05T11:16:20.452748+00:00
+H1,h1_engagement_indirect,peripheral_p90,indirect_clean,10806,0.1322504696495472,0.0293953181788499,6.826366440515378e-06,***,0.132*** (0.029),,peripheral = verified==0 & followers<p90 (679972); n_peripheral=10877,2026-07-05T11:16:20.452748+00:00
+H1,h1_engagement_indirect,peripheral_p95,indirect_clean,10853,0.1297090360334681,0.0296339182871167,1.2029835946538294e-05,***,0.130*** (0.030),,peripheral = verified==0 & followers<p95 (1967472); n_peripheral=10924,2026-07-05T11:16:20.452748+00:00

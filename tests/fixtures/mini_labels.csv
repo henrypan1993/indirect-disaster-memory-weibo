@@ -1,0 +1,7 @@
+global_row_id,mid,period,created_at_dt,analysis_text_final,llm_label_narrative,llm_label_emotion,llm_label_expression,label_narrative_clean,label_emotion_clean,label_expression_clean,text_hash,include_main,indirect_clean,needs_manual_review,high_clarity,peripheral,t2,likes_count,comments_count,reposts_count,log_followers,verified,account_id,wave,account_group
+1,m001,T1,2021-07-20 10:00:00+00:00,#TAGA# SYNTHETIC_HELP_A,Trauma-Help-Loss,Fear-Anger,Direct,Trauma-Help-Loss,Fear-Anger,Direct,hash_a,1,0.0,False,True,1,0,10,2,1,5.0,0,acc1,T1,peripheral
+2,m002,T1,2021-07-20 11:00:00+00:00,#TAGA# SYNTHETIC_HELP_A,Trauma-Help-Loss,Fear-Anger,Indirect-Mixed,Trauma-Help-Loss,Fear-Anger,Indirect-Mixed,hash_a,1,1.0,False,True,1,0,5,0,0,5.0,0,acc2,T1,peripheral
+3,m003,T1,2021-07-21 09:00:00+00:00,SYNTHETIC_RESTORE_B,Restoration,Hope,Direct,Restoration,Hope,Direct,hash_b,1,0.0,False,True,0,0,100,20,30,10.0,1,acc3,T1,mainstream
+4,m004,T2,2025-07-20 08:00:00+00:00,SYNTHETIC_MEMORY_C,Memory-Reactivation,Sadness,Indirect-Mixed,Memory-Reactivation,Sadness,Indirect-Mixed,hash_c,1,1.0,False,True,1,1,2,1,0,4.0,0,acc1,T2,peripheral
+5,m005,T2,2025-07-21 12:00:00+00:00,SYNTHETIC_WEATHER_D,Ordinary-Weather-Info,Neutral-Informational,Direct,Ordinary-Weather-Info,Neutral-Informational,Direct,hash_d,1,0.0,False,True,1,1,1,0,0,3.0,0,acc4,T2,peripheral
+6,m006,T1,2021-07-22 15:00:00+00:00,SYNTHETIC_UNCLEAR_E,Other-Unclear,Other-Unclear,Unclear,Other-Unclear,Other-Unclear,Unclear,hash_e,1,,True,False,1,0,0,0,0,2.0,0,acc5,T1,peripheral

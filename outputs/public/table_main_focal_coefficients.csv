@@ -1,0 +1,7 @@
+formal_label,model_id,term,coef,se,pvalue,p_fmt,stars,coef_display,or_display,pct_display,n,estimator,built_at
+H1,h1_engagement_indirect,indirect_clean,0.1322504696495472,0.0293953181788499,6.826366440515378e-06,<0.001,***,0.132*** (0.029),,14.1%,10806,"OLS, cluster SE by account",2026-07-05T11:16:20.452748+00:00
+H2,h2b_indirect_reactivation,t2,0.8801917049976754,0.0830567753728203,3.06149647880771e-26,<0.001,***,0.880*** (0.083),2.41***,,5846,"Logit, cluster SE by account",2026-07-05T11:16:20.452748+00:00
+D1,h2a_entropy_reactivation,t2,-0.0104455677000987,0.0014719282348144,1.2793772717619033e-12,<0.001,***,-0.010*** (0.001),,,5880,"OLS, cluster SE by account",2026-07-05T11:16:20.452748+00:00
+D2,e2_entropy_increment,entropy_norm,-0.0901093597649407,0.247857985032458,0.716192293774599,0.716,,-0.090 (0.248),,,10806,"OLS, cluster SE by account",2026-07-05T11:16:20.452748+00:00
+D2,e2_entropy_increment,indirect_clean,0.1324108060310065,0.0293893826732871,6.624929145081181e-06,<0.001,***,0.132*** (0.029),,,10806,"OLS, cluster SE by account",2026-07-05T11:16:20.452748+00:00
+D3,e1b_indirect_peripheral,peripheral,1.2455706996653582,1.0420516340768944,0.2319674480052826,0.232,,1.246 (1.042),3.47,,17067,"Logit, cluster SE by account",2026-07-05T11:16:20.452748+00:00

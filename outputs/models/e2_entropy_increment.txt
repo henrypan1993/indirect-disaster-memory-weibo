@@ -1,0 +1,51 @@
+=== Pre-fit diagnostics ===
+formula: log_engagement ~ indirect_clean + entropy_norm + t2 + log_followers + post_hour_cst + hashtag_count + text_length + C(topic_id)
+n_obs=10806, n_accounts=9897
+design_matrix_rank=17, n_params=17
+condition_number=7494
+zero_variance_cols=none
+rank_deficient=False
+=== Model summary ===
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:         log_engagement   R-squared:                       0.111
+Model:                            OLS   Adj. R-squared:                  0.110
+Method:                 Least Squares   F-statistic:                     59.82
+Date:                Sun, 05 Jul 2026   Prob (F-statistic):          2.54e-184
+Time:                        19:14:49   Log-Likelihood:                -14096.
+No. Observations:               10806   AIC:                         2.823e+04
+Df Residuals:                   10789   BIC:                         2.835e+04
+Df Model:                          16                                         
+Covariance Type:              cluster                                         
+====================================================================================
+                       coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------------
+Intercept            0.2450      0.230      1.065      0.287      -0.206       0.696
+C(topic_id)[T.1]     0.2058      0.071      2.885      0.004       0.066       0.346
+C(topic_id)[T.2]    -0.4213      0.072     -5.850      0.000      -0.562      -0.280
+C(topic_id)[T.3]     0.1165      0.073      1.599      0.110      -0.026       0.259
+C(topic_id)[T.4]    -0.3471      0.105     -3.298      0.001      -0.553      -0.141
+C(topic_id)[T.5]    -0.2104      0.070     -3.018      0.003      -0.347      -0.074
+C(topic_id)[T.6]    -0.4426      0.097     -4.579      0.000      -0.632      -0.253
+C(topic_id)[T.7]    -0.3763      0.101     -3.737      0.000      -0.574      -0.179
+C(topic_id)[T.8]    -0.1508      0.072     -2.103      0.035      -0.291      -0.010
+C(topic_id)[T.9]    -0.0861      0.068     -1.268      0.205      -0.219       0.047
+indirect_clean       0.1324      0.029      4.505      0.000       0.075       0.190
+entropy_norm        -0.0901      0.248     -0.364      0.716      -0.576       0.396
+t2                  -0.1825      0.023     -7.880      0.000      -0.228      -0.137
+log_followers        0.0829      0.005     16.539      0.000       0.073       0.093
+post_hour_cst        0.0004      0.001      0.274      0.784      -0.002       0.003
+hashtag_count        0.0352      0.011      3.276      0.001       0.014       0.056
+text_length          0.0003   7.09e-05      3.951      0.000       0.000       0.000
+==============================================================================
+Omnibus:                     5429.221   Durbin-Watson:                   1.937
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            41177.655
+Skew:                           2.303   Prob(JB):                         0.00
+Kurtosis:                      11.381   Cond. No.                     7.49e+03
+==============================================================================
+
+Notes:
+[1] Standard Errors are robust to cluster correlation (cluster)
+[2] The condition number is large, 7.49e+03. This might indicate that there are
+strong multicollinearity or other numerical problems.

@@ -1,0 +1,9 @@
+file,n_rows,source
+table_main_focal_coefficients.csv,6,outputs/tables/table_4_main_regression_focal.csv
+table_main_selected_coefficients.csv,9,outputs/tables/table_4_main_regression_full.csv (focal+t2 terms only)
+table_h1_engagement_components.csv,3,outputs/tables/appendix_A1_robustness_focal.csv (engagement_*)
+table_robustness_focal.csv,43,outputs/tables/appendix_A1_robustness_focal.csv (whitelist models)
+table_peripheral_threshold_sensitivity.csv,6,appendix_A1 peripheral_p80/p90/p95 for H1+D3
+table_entropy_ktau_grid.csv,27,appendix_A1 k*_tau* for D1+D2 plus main k10_tau010 from main_models_summary
+summary_main_models.csv,9,outputs/models/main_models_summary.csv
+summary_robustness_models.csv,68,outputs/models/robustness_models_summary.csv

@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv/
+.pytest_cache/
+.ruff_cache/
+.cache/
+models/
+
+# Secrets / local env
+.env
+.env.*
+
+# Restricted analytical data (never publish)
+data/input/
+data/processed/
+data/reports/
+
+# Internal Chinese drafts (outside public Git history)
+finding/
+
+# One-off / local helper scripts (not part of the 00–09 pipeline)
+scripts/_*.py
+
+# Generated outputs: ignore by default
+outputs/tables/
+outputs/figures/
+outputs/models/
+outputs/reports/
+
+# Allow curated public release tables only
+!outputs/public/
+!outputs/public/**
+
+# Allow selected full-regression text dumps (H1 / H2 / D1 / D2 / D3 only)
+!outputs/models/
+outputs/models/*
+!outputs/models/h1_engagement_indirect.txt
+!outputs/models/h2a_entropy_reactivation.txt
+!outputs/models/h2b_indirect_reactivation.txt
+!outputs/models/e2_entropy_increment.txt
+!outputs/models/e1b_indirect_peripheral.txt

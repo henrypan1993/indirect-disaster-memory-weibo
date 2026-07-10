@@ -1,0 +1,4 @@
+formal_label,model_id,spec_id,term,n,coef,se,pvalue,p_fmt,stars,coef_display,pct_display,notes,built_at
+H1,h1_engagement_indirect,engagement_comments,indirect_clean,10806,0.0704454872947723,0.0203714143842245,0.0005440887177229,<0.001,***,0.070*** (0.020),7.3%,H1 y=log_comments,2026-07-05T11:16:20.452748+00:00
+H1,h1_engagement_indirect,engagement_likes,indirect_clean,10806,0.10184501680049,0.0253867770277086,6.027418867056597e-05,<0.001,***,0.102*** (0.025),10.7%,H1 y=log_likes,2026-07-05T11:16:20.452748+00:00
+H1,h1_engagement_indirect,engagement_reposts,indirect_clean,10806,0.0070914601328502,0.011223094193963,0.5274762763560146,0.527,,0.007 (0.011),0.7%,H1 y=log_reposts,2026-07-05T11:16:20.452748+00:00
