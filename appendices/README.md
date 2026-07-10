@@ -5,7 +5,7 @@ Formal English appendices for the manuscript. One canonical file per appendix.
 | File | Role |
 |------|------|
 | [Appendix_A.md](Appendix_A.md) | Data retrieval and corpus construction |
-| [Appendix_B.md](Appendix_B.md) | Codebook, annotation, and validation (Tables B1–B3) |
+| [Appendix_B.md](Appendix_B.md) | Codebook, annotation workflow, and validation (Tables B1–B3) |
 | [Appendix_C.md](Appendix_C.md) | Topic entropy construction and robustness |
 | [Appendix_D.md](Appendix_D.md) | Peripheral definition and threshold sensitivity |
 | [Appendix_E.md](Appendix_E.md) | Full regression tables |

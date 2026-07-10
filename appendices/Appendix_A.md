@@ -42,4 +42,4 @@ The main sample comprises posts that remained accessible at collection, were suc
 | Visibility | Retain visible posts with non-empty analysis text |
 | Labels | Harmonize within `text_hash × wave` by strict majority vote |
 
-`text_hash` is SHA-256 of UTF-8 stripped analysis text. Cleaned Core table: N = 17,143; high-clarity = 16,977; needs manual review = 307.
+`text_hash` is SHA-256 of UTF-8 stripped analysis text. The cleaned Core analysis table has N = 17,143 (Table A2).

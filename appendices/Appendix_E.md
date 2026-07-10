@@ -1,8 +1,6 @@
 # Appendix E. Full Regression Tables
 
-Clustered robust standard errors by `account_id` in parentheses. Peripheral-subsample models omit `verified` (structurally constant). Topic fixed effects use hard-assigned `topic_id` (reference = topic 0).
-
-Curated focal coefficients: `outputs/public/table_main_focal_coefficients.csv`. Full text dumps: selected files under `outputs/models/`.
+Clustered robust standard errors by `account_id` in parentheses. \* *p* < .05, \*\* *p* < .01, \*\*\* *p* < .001. Peripheral-subsample models omit `verified` (structurally constant). Topic fixed effects use hard-assigned `topic_id` (reference = topic 0). Machine-readable dumps: `outputs/models/*.txt`.
 
 ## E.1 Model overview
 
@@ -19,25 +17,34 @@ Curated focal coefficients: `outputs/public/table_main_focal_coefficients.csv`. 
 ## E.2 H1 — Engagement and indirect/mixed expression
 
 $$
-\log(1+\mathrm{Engagement}_i)
-=
-\alpha + \beta_1 \mathrm{Indirect/Mixed}_i + \lambda \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma} + \delta_{z_i} + \varepsilon_i.
+\log(1+\mathrm{Engagement}_i) = \alpha + \beta_1 \mathrm{Indirect/Mixed}_i + \lambda \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma} + \delta_{z_i} + \varepsilon_i.
 $$
 
-**Table E2. H1 OLS coefficients (selected)**
+**Table E2. H1 OLS (full coefficients)**
+
+Source: `outputs/models/h1_engagement_indirect.txt`.
 
 | Variable | Coef. | SE |
 |----------|------:|---:|
+| Intercept | 0.166* | 0.074 |
+| Topic 1 | 0.200** | 0.069 |
+| Topic 2 | −0.427*** | 0.070 |
+| Topic 3 | 0.113 | 0.072 |
+| Topic 4 | −0.341*** | 0.101 |
+| Topic 5 | −0.210** | 0.070 |
+| Topic 6 | −0.445*** | 0.096 |
+| Topic 7 | −0.367*** | 0.099 |
+| Topic 8 | −0.158* | 0.068 |
+| Topic 9 | −0.088 | 0.067 |
 | Indirect/mixed | 0.132*** | 0.029 |
 | T2 | −0.181*** | 0.023 |
 | log(followers) | 0.083*** | 0.005 |
 | Posting hour (CST) | 0.0004 | 0.001 |
 | Hashtag count | 0.035*** | 0.011 |
 | Text length | 0.0003*** | 0.00007 |
-| Topic FE | Yes | |
-| N / R² | 10,806 / 0.111 | |
+| N / R² / Adj. R² | 10,806 / 0.111 / 0.110 | |
 
-Source file: `outputs/models/h1_engagement_indirect.txt`. Approx. %Δ for indirect/mixed: +14.1%.
+Approx. %Δ for indirect/mixed: +14.1%.
 
 ## E.3 H1 engagement components (robustness)
 
@@ -54,32 +61,92 @@ Source: `outputs/public/table_h1_engagement_components.csv`.
 ## E.4 H2 — Indirect/mixed expression and T2
 
 $$
-\operatorname{logit}\!\left[\Pr(\mathrm{Indirect/Mixed}_i=1)\right]
-=
-\alpha + \beta \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma}.
+\operatorname{logit}\!\left[\Pr(\mathrm{Indirect/Mixed}_i=1)\right] = \alpha + \beta \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma}.
 $$
 
-**Table E4. H2 logit coefficients (selected)**
+**Table E4. H2 logit (full coefficients)**
+
+Source: `outputs/models/h2b_indirect_reactivation.txt`.
 
 | Variable | Coef. | SE | OR |
 |----------|------:|---:|---:|
-| T2 | 0.880*** | 0.083 | **2.41** |
+| Intercept | −1.714*** | 0.126 | — |
+| T2 | 0.880*** | 0.083 | 2.41 |
 | log(followers) | 0.020 | 0.017 | — |
+| Posting hour (CST) | 0.001 | 0.005 | — |
 | Hashtag count | −0.089** | 0.027 | — |
 | Text length | −0.001* | 0.0005 | — |
 | N / Pseudo-R² (CS) | 5,846 / 0.026 | | |
 
-Source file: `outputs/models/h2b_indirect_reactivation.txt`.
+## E.5 D1 — Topic entropy and T2
 
-## E.5 D1–D3 — Secondary and boundary models
+$$
+\mathrm{Entropy}_i = \alpha + \beta \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma} + \varepsilon_i.
+$$
 
-**Table E5. Focal coefficients for D1–D3**
+**Table E5. D1 OLS (full coefficients)**
 
-| Label | Focal term | Coef. | SE | *p* | Notes |
-|-------|------------|------:|---:|----:|-------|
-| D1 | T2 → entropy | −0.010*** | 0.001 | <.001 | Secondary / diagnostic |
-| D2 | Indirect → engagement | 0.132*** | 0.029 | <.001 | Stable vs H1 |
-| D2 | Entropy → engagement | −0.090 | 0.248 | .716 | Does not explain H1 |
-| D3 | Peripheral → indirect | 1.246 | 1.042 | .232 | OR ≈ 3.47; ns |
+Source: `outputs/models/h2a_entropy_reactivation.txt`.
 
-Sources: `outputs/models/h2a_entropy_reactivation.txt`, `e2_entropy_increment.txt`, `e1b_indirect_peripheral.txt`; curated focal CSV.
+| Variable | Coef. | SE |
+|----------|------:|---:|
+| Intercept | 0.922*** | 0.002 |
+| T2 | −0.010*** | 0.001 |
+| log(followers) | −0.0002 | 0.0003 |
+| Posting hour (CST) | −0.0002* | 0.00007 |
+| Hashtag count | 0.002*** | 0.0004 |
+| Text length | −0.000012*** | 0.000003 |
+| N / R² / Adj. R² | 5,880 / 0.020 / 0.019 | |
+
+## E.6 D2 — Engagement with entropy increment
+
+$$
+\log(1+\mathrm{Engagement}_i) = \alpha + \beta_1 \mathrm{Indirect/Mixed}_i + \beta_2 \mathrm{Entropy}_i + \lambda \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma} + \delta_{z_i} + \varepsilon_i.
+$$
+
+**Table E6. D2 OLS (full coefficients)**
+
+Source: `outputs/models/e2_entropy_increment.txt`.
+
+| Variable | Coef. | SE |
+|----------|------:|---:|
+| Intercept | 0.245 | 0.230 |
+| Topic 1 | 0.206** | 0.071 |
+| Topic 2 | −0.421*** | 0.072 |
+| Topic 3 | 0.117 | 0.073 |
+| Topic 4 | −0.347*** | 0.105 |
+| Topic 5 | −0.210** | 0.070 |
+| Topic 6 | −0.443*** | 0.097 |
+| Topic 7 | −0.376*** | 0.101 |
+| Topic 8 | −0.151* | 0.072 |
+| Topic 9 | −0.086 | 0.068 |
+| Indirect/mixed | 0.132*** | 0.029 |
+| Entropy (normalized) | −0.090 | 0.248 |
+| T2 | −0.183*** | 0.023 |
+| log(followers) | 0.083*** | 0.005 |
+| Posting hour (CST) | 0.0004 | 0.001 |
+| Hashtag count | 0.035*** | 0.011 |
+| Text length | 0.0003*** | 0.00007 |
+| N / R² / Adj. R² | 10,806 / 0.111 / 0.110 | |
+
+## E.7 D3 — Indirect/mixed expression and peripheral position
+
+$$
+\operatorname{logit}\!\left[\Pr(\mathrm{Indirect/Mixed}_i=1)\right] = \alpha + \beta \mathrm{Peripheral}_i + \lambda \mathrm{T2}_i + \mathbf{X}_i\boldsymbol{\gamma}.
+$$
+
+**Table E7. D3 logit (full coefficients)**
+
+Source: `outputs/models/e1b_indirect_peripheral.txt`.
+
+| Variable | Coef. | SE | OR |
+|----------|------:|---:|---:|
+| Intercept | −2.807** | 1.052 | — |
+| Peripheral | 1.246 | 1.042 | 3.47 |
+| T2 | 0.622*** | 0.060 | — |
+| log(followers) | −0.030* | 0.012 | — |
+| Verified | 0.448 | 1.039 | — |
+| Posting hour (CST) | −0.001 | 0.004 | — |
+| Hashtag count | −0.191*** | 0.032 | — |
+| Text length | −0.003*** | 0.001 | — |
+| N / Pseudo-R² (CS) | 17,067 / 0.036 | | |

@@ -1,4 +1,4 @@
-# Appendix B. Codebook, Annotation Prompts, and Validation
+# Appendix B. Codebook, Annotation Workflow, and Validation
 
 LLM labels are treated as **fallible structured measurements**. Production prompts reside in the upstream labeling project; this appendix records the coding rules and validation metrics used in the manuscript.
 
@@ -29,8 +29,6 @@ Core JSON keys: `mid`, `label_narrative`, `label_emotion`, `label_expression`, r
 Primary validity: Core LLM versus human-adjudicated gold (core_B200; 199 effective pairs). Auxiliary Gate checks use pilot joint-human labels. Post-annotation QA (n = 40) is a stability check, not co-equal primary evidence.
 
 ## B.5 Validation metrics
-
-Tables in this appendix: **B1** expression definitions; **B2** agreement metrics; **B3** expression confusion matrix (added to report class-level error for Indirect-Mixed; not a renumbering typo relative to an earlier B1–B2 sketch).
 
 **Table B2. Agreement and classification metrics**
 

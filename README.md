@@ -86,8 +86,8 @@ Gate/Core prompts and validation details are summarized in [Appendix B](appendic
 
 Software code is licensed under MIT as stated in [`LICENSE-CODE`](LICENSE-CODE).
 
-**`LICENSE-CODE` applies only to software code.** It does **not** apply to manuscript text, appendices, article-derived documentation, Weibo-derived materials, curated numerical release tables beyond ordinary scholarly quotation, or third-party content.
+The MIT License applies only to software code. Manuscript text, appendices, and Weibo-derived materials remain under the authors’ copyright and are provided for scholarly verification.
 
 ## Citation
 
-Cite the manuscript when using these materials. A `CITATION.cff` may be added when the public repository URL and author metadata are finalized.
+Cite the manuscript when using these materials. A `CITATION.cff` will be added after the manuscript metadata and author identifiers are finalized.
