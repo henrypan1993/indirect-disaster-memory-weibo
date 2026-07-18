@@ -12,7 +12,7 @@ Those files remain on restricted research systems. They are required for **tier-
 
 ## What is published instead
 
-Curated aggregate coefficient tables under [`outputs/public/`](../outputs/public/), plus selected full regression text dumps for H1, H2, D1, D2, and D3.
+Curated aggregate coefficient tables under [`outputs/public/`](../outputs/public/), plus selected full regression text dumps for H1, H2, and D1.
 
 ## Access
 

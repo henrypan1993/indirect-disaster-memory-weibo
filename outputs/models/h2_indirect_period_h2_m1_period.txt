@@ -1,0 +1,39 @@
+=== Pre-fit diagnostics ===
+formula: indirect_clean ~ t2 + log_followers + post_hour_cst + hashtag_count + text_length + C(topic_id, Treatment(reference='0'))
+n_obs=5846, n_accounts=5476
+design_matrix_rank=15, n_params=15
+condition_number=5746
+zero_variance_cols=none
+rank_deficient=False
+=== Model summary ===
+
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:         indirect_clean   No. Observations:                 5846
+Model:                            GLM   Df Residuals:                     5831
+Model Family:                Binomial   Df Model:                           14
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -2480.8
+Date:                Fri, 17 Jul 2026   Deviance:                       4961.6
+Time:                        14:11:49   Pearson chi2:                 5.83e+03
+No. Iterations:                     6   Pseudo R-squ. (CS):            0.05141
+Covariance Type:              cluster                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+Intercept                                     -0.6393      0.266     -2.403      0.016      -1.161      -0.118
+C(topic_id, Treatment(reference='0'))[T.1]    -1.0473      0.248     -4.225      0.000      -1.533      -0.561
+C(topic_id, Treatment(reference='0'))[T.2]    -1.6663      0.272     -6.129      0.000      -2.199      -1.133
+C(topic_id, Treatment(reference='0'))[T.3]    -0.8931      0.258     -3.463      0.001      -1.399      -0.388
+C(topic_id, Treatment(reference='0'))[T.4]     0.0269      0.696      0.039      0.969      -1.337       1.391
+C(topic_id, Treatment(reference='0'))[T.5]    -2.6947      0.380     -7.087      0.000      -3.440      -1.949
+C(topic_id, Treatment(reference='0'))[T.6]    -1.9268      0.558     -3.452      0.001      -3.021      -0.833
+C(topic_id, Treatment(reference='0'))[T.7]    -0.6625      0.334     -1.981      0.048      -1.318      -0.007
+C(topic_id, Treatment(reference='0'))[T.8]    -1.4015      0.265     -5.281      0.000      -1.922      -0.881
+C(topic_id, Treatment(reference='0'))[T.9]    -0.5865      0.247     -2.373      0.018      -1.071      -0.102
+t2                                             0.6507      0.095      6.814      0.000       0.464       0.838
+log_followers                                  0.0128      0.018      0.729      0.466      -0.022       0.047
+post_hour_cst                                 -0.0003      0.005     -0.053      0.958      -0.011       0.010
+hashtag_count                                  0.0012      0.030      0.039      0.969      -0.057       0.060
+text_length                                   -0.0012      0.001     -2.014      0.044      -0.002   -3.16e-05
+==============================================================================================================

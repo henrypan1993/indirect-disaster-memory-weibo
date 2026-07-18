@@ -1,27 +1,26 @@
 # Appendices (English)
 
-Formal English appendices for the manuscript. One canonical file per appendix.
+Formal English appendices for the manuscript.
 
 | File | Role |
 |------|------|
-| [Appendix_A.md](Appendix_A.md) | Data retrieval and corpus construction |
-| [Appendix_B.md](Appendix_B.md) | Codebook, annotation workflow, and validation (Tables B1–B3) |
-| [Appendix_C.md](Appendix_C.md) | Topic entropy construction and robustness |
-| [Appendix_D.md](Appendix_D.md) | Peripheral definition and threshold sensitivity |
-| [Appendix_E.md](Appendix_E.md) | Full regression tables |
+| [Appendix_A.md](Appendix_A.md) | Corpus construction and sample screening (Tables A1–A2) |
+| [Appendix_B.md](Appendix_B.md) | Expression coding and validation (Tables B1–B2) |
+| [Appendix_C.md](Appendix_C.md) | Robustness to alternative peripheral thresholds (Table C1) |
+| [Appendix_D.md](Appendix_D.md) | Complete regression results (Tables D1–D3) |
 
-## Formal labels
+Excluded topic-entropy materials are archived under [`legacy/entropy_diagnostics/`](../legacy/entropy_diagnostics/) and are not part of the formal appendix set.
+
+## Formal labels (repository mapping)
 
 | Label | Meaning |
 |-------|---------|
-| H1 | Engagement ~ indirect/mixed (peripheral subsample) |
-| H2 | Indirect/mixed ~ T2 (peripheral trauma-related subsample) |
-| D1 | Entropy ~ T2 (secondary / diagnostic) |
-| D2 | Engagement ~ indirect + entropy (boundary) |
-| D3 | Indirect/mixed ~ peripheral (boundary) |
+| H1 | Engagement ~ Indirect/Mixed (peripheral subsample) |
+| H2 | Indirect/Mixed ~ T2 (disaster-impact-related peripheral subsample) |
+| Boundary test | Indirect/Mixed ~ peripheral (full Core; primary / conditional) |
 
-Repository `model_id` strings are listed only in [`docs/model_name_mapping.md`](../docs/model_name_mapping.md).
+Repository `model_id` strings: [`docs/model_name_mapping.md`](../docs/model_name_mapping.md).
 
 ## Statistical conventions
 
-Clustered robust standard errors by `account_id`. \* *p* < .05, \*\* *p* < .01, \*\*\* *p* < .001. Logit coefficients are log-odds; OR = exp(coef) where shown.
+Clustered robust standard errors by account. \* *p* < .05, \*\* *p* < .01, \*\*\* *p* < .001. Logit coefficients are log-odds; OR = exp(coef) where shown.

@@ -3,8 +3,8 @@
 ## Public materials
 
 - Curated coefficient tables: `outputs/public/`
-- Selected model text dumps: five files under `outputs/models/` (H1, H2, D1, D2, D3)
-- Formal appendices: `appendices/`
+- Selected model text dumps under `outputs/models/` (H1, H2-M1/M2, D1-M1/M2)
+- Formal appendices A–D: `appendices/`
 
 ## Restricted materials (not redistributed)
 

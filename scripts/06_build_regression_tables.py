@@ -300,9 +300,7 @@ def build_robustness_focal(df: pd.DataFrame) -> pd.DataFrame:
         for spec in sorted(sub["spec_id"].unique()):
             for term in focal:
                 hit = sub[
-                    (sub["model_id"] == mid)
-                    & (sub["spec_id"] == spec)
-                    & (sub["term"] == term)
+                    (sub["model_id"] == mid) & (sub["spec_id"] == spec) & (sub["term"] == term)
                 ]
                 if hit.empty:
                     continue
@@ -346,9 +344,7 @@ def build_main_vs_appendix_compare(df: pd.DataFrame) -> pd.DataFrame:
             "n": "n_main",
         }
     )
-    w = wot[
-        ["model_id", "term", "coef", "se", "pvalue", "coef_display", "n"]
-    ].rename(
+    w = wot[["model_id", "term", "coef", "se", "pvalue", "coef_display", "n"]].rename(
         columns={
             "coef": "coef_no_t2",
             "se": "se_no_t2",

@@ -22,7 +22,7 @@ import patsy
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from common import (
-    PATH_ANALYSIS_ENTROPY,
+    PATH_ANALYSIS_TOPICS,
     PROJECT_ROOT,
     apply_sample_mask,
     build_formula,
@@ -95,9 +95,7 @@ def build_figure(
     pvalue: float,
     pct_change: float,
 ) -> plt.Figure:
-    plt.rcParams.update(
-        {"font.family": "DejaVu Sans", "font.size": 10, "savefig.dpi": 300}
-    )
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10, "savefig.dpi": 300})
     fig, ax = plt.subplots(figsize=(5.6, 5.2))
     xs = [0, 1]
     ys = [points["direct"], points["indirect"]]
@@ -145,7 +143,7 @@ def build_figure(
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--input", type=Path, default=PATH_ANALYSIS_ENTROPY)
+    p.add_argument("--input", type=Path, default=PATH_ANALYSIS_TOPICS)
     p.add_argument("--n-boot", type=int, default=1000)
     p.add_argument("--seed", type=int, default=12345)
     args = p.parse_args()

@@ -1,0 +1,41 @@
+=== Pre-fit diagnostics ===
+formula: indirect_clean ~ peripheral + t2 + log_followers + verified + post_hour_cst + hashtag_count + text_length + C(topic_id, Treatment(reference='0'))
+n_obs=17067, n_accounts=14138
+design_matrix_rank=17, n_params=17
+condition_number=7216
+zero_variance_cols=none
+rank_deficient=False
+=== Model summary ===
+
+                 Generalized Linear Model Regression Results                  
+==============================================================================
+Dep. Variable:         indirect_clean   No. Observations:                17067
+Model:                            GLM   Df Residuals:                    17050
+Model Family:                Binomial   Df Model:                           16
+Link Function:                  Logit   Scale:                          1.0000
+Method:                          IRLS   Log-Likelihood:                -4546.8
+Date:                Fri, 17 Jul 2026   Deviance:                       9093.5
+Time:                        14:12:35   Pearson chi2:                 1.71e+04
+No. Iterations:                     8   Pseudo R-squ. (CS):            0.06895
+Covariance Type:              cluster                                         
+==============================================================================================================
+                                                 coef    std err          z      P>|z|      [0.025      0.975]
+--------------------------------------------------------------------------------------------------------------
+Intercept                                     -2.7005      1.096     -2.463      0.014      -4.849      -0.552
+C(topic_id, Treatment(reference='0'))[T.1]     0.2199      0.151      1.458      0.145      -0.076       0.515
+C(topic_id, Treatment(reference='0'))[T.2]    -1.0232      0.174     -5.884      0.000      -1.364      -0.682
+C(topic_id, Treatment(reference='0'))[T.3]     0.0092      0.159      0.058      0.954      -0.302       0.320
+C(topic_id, Treatment(reference='0'))[T.4]    -2.1521      0.454     -4.744      0.000      -3.041      -1.263
+C(topic_id, Treatment(reference='0'))[T.5]    -1.4117      0.209     -6.764      0.000      -1.821      -1.003
+C(topic_id, Treatment(reference='0'))[T.6]    -2.6416      0.438     -6.025      0.000      -3.501      -1.782
+C(topic_id, Treatment(reference='0'))[T.7]    -0.0762      0.221     -0.345      0.730      -0.509       0.356
+C(topic_id, Treatment(reference='0'))[T.8]    -0.8315      0.157     -5.294      0.000      -1.139      -0.524
+C(topic_id, Treatment(reference='0'))[T.9]     0.6471      0.149      4.341      0.000       0.355       0.939
+peripheral                                     1.1666      1.075      1.085      0.278      -0.941       3.274
+t2                                             0.4827      0.072      6.748      0.000       0.343       0.623
+log_followers                                 -0.0320      0.012     -2.617      0.009      -0.056      -0.008
+verified                                       0.5459      1.073      0.509      0.611      -1.557       2.649
+post_hour_cst                                 -0.0066      0.004     -1.489      0.137      -0.015       0.002
+hashtag_count                                 -0.0380      0.031     -1.224      0.221      -0.099       0.023
+text_length                                   -0.0016      0.001     -2.418      0.016      -0.003      -0.000
+==============================================================================================================

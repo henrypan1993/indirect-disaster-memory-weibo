@@ -102,8 +102,7 @@ def main() -> None:
                     "removed_variable": "verified",
                     "n": diag.get("n_obs"),
                     "n_accounts": diag.get("n_accounts"),
-                    "covariance": meta.get("covariance_estimator")
-                    or parse_covariance(txt_after),
+                    "covariance": meta.get("covariance_estimator") or parse_covariance(txt_after),
                     "focal_term": term,
                     "coef_before": cb,
                     "coef_after": ca,

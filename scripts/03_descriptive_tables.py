@@ -14,7 +14,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import PATH_ANALYSIS_ENTROPY, PROJECT_ROOT
+from common import PATH_ANALYSIS_TOPICS, PROJECT_ROOT
 
 OUT_TABLES = PROJECT_ROOT / "outputs" / "tables"
 OUT_FIGURES = PROJECT_ROOT / "outputs" / "figures"
@@ -22,7 +22,7 @@ OUT_FIGURES = PROJECT_ROOT / "outputs" / "figures"
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--input", type=Path, default=PATH_ANALYSIS_ENTROPY)
+    p.add_argument("--input", type=Path, default=PATH_ANALYSIS_TOPICS)
     args = p.parse_args()
 
     inp = args.input.expanduser().resolve()
@@ -83,9 +83,9 @@ def main() -> None:
 
     # Fig 2: expression by group
     fig, ax = plt.subplots(figsize=(8, 5))
-    main_df.groupby("account_group")["label_expression_clean"].value_counts(
-        normalize=True
-    ).unstack(fill_value=0).plot(kind="bar", ax=ax)
+    main_df.groupby("account_group")["label_expression_clean"].value_counts(normalize=True).unstack(
+        fill_value=0
+    ).plot(kind="bar", ax=ax)
     ax.set_title("Expression distribution by account group")
     ax.set_ylabel("proportion")
     fig.tight_layout()

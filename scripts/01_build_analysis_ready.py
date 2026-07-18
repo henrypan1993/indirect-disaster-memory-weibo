@@ -61,6 +61,7 @@ def build_analysis_ready(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]
     out["narrative_trauma_clean"] = narrative_trauma_clean(
         out["label_narrative_clean"].astype("string")
     )
+    out["disaster_impact_related"] = out["narrative_trauma_clean"]
     out["model_sample_h1_indirect"] = include & out["indirect_clean"].notna()
     out["model_sample_h2"] = include & (out["peripheral"] == 1)
     out["model_sample_h4_indirect"] = (

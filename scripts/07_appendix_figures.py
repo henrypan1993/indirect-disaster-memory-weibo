@@ -1,13 +1,14 @@
-"""Appendix figures.
+"""Appendix / manuscript figures.
 
-Figure A1: Sample construction flow (fixed pipeline counts from Appendix A.4).
-Figure A2: T1 vs T2 expression and entropy comparison on the trauma x peripheral
-           sample (same scope as H2a / H2b); descriptive only.
+Figure A1: Sample construction flow (fixed pipeline counts from Appendix A).
+Figure A2 / Figure 3: T1 vs T2 Indirect/Mixed share on the H2 analytical sample
+           (peripheral × disaster-impact-related × valid expression); descriptive only.
 """
 
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 from pathlib import Path
 
@@ -21,7 +22,7 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from common import PATH_ANALYSIS_ENTROPY, PROJECT_ROOT, apply_sample_mask
+from common import PATH_ANALYSIS_TOPICS, PATH_MODEL_DATA_FINAL, PROJECT_ROOT, apply_sample_mask
 
 OUT_FIGURES = PROJECT_ROOT / "outputs" / "figures"
 
@@ -55,6 +56,11 @@ SURVIVOR_NOTE = (
     "collection time. Engagement reflects interaction within surviving posts, not "
     "exposure, recommendation, or platform-retention probability."
 )
+
+# H2 analytical sample sizes after remodel (sample_h2_eligible / complete expression).
+EXPECTED_H2_N = 5_846
+EXPECTED_H2_N_T1 = 4_827
+EXPECTED_H2_N_T2 = 1_019
 
 
 def wilson_ci_errors(
@@ -126,7 +132,6 @@ def fig_a1_sample_flow(out_path: Path) -> None:
                 )
             )
 
-    # Explain the non-monotonic step (38,980 -> 39,654).
     y_mid = (y_positions[1] + y_positions[2]) / 2
     ax.annotate(
         "Non-monotonic step (+674):\nengineering merge & record\nalignment, not new collection",
@@ -156,110 +161,122 @@ def fig_a1_sample_flow(out_path: Path) -> None:
     plt.close(fig)
 
 
-def fig_a2_t1_t2(df: pd.DataFrame, out_path: Path) -> dict[str, int]:
-    sub = apply_sample_mask(df, "trauma_peripheral").copy()
-    sub["t2"] = pd.to_numeric(sub["t2"], errors="coerce")
+def fig_h2_expression_by_context(df: pd.DataFrame, out_path: Path) -> dict[str, float | int]:
+    """Single-panel descriptive bar chart for manuscript Figure 3 / appendix A2.
 
+    Uses the remodeled H2 sample: peripheral ∩ disaster-impact-related ∩
+    non-missing expression (`sample_key='h2'` / `sample_h2_eligible`).
+    """
+    sub = apply_sample_mask(df, "h2").copy()
+    sub["t2"] = pd.to_numeric(sub["t2"], errors="coerce")
     expr = sub.dropna(subset=["indirect_clean", "t2"])
+
+    n_total = len(expr)
+    if n_total != EXPECTED_H2_N:
+        print(
+            f"WARNING: H2 expression sample N={n_total} "
+            f"(expected {EXPECTED_H2_N} from remodeled model_data_final)"
+        )
+
     grp = expr.groupby("t2")["indirect_clean"].agg(["mean", "count"])
+    if 0 not in grp.index or 1 not in grp.index:
+        raise SystemExit("H2 sample missing T1 or T2 after dropna on indirect_clean/t2")
+
     props = [float(grp.loc[0, "mean"]), float(grp.loc[1, "mean"])]
     n_expr = [int(grp.loc[0, "count"]), int(grp.loc[1, "count"])]
+    if n_expr != [EXPECTED_H2_N_T1, EXPECTED_H2_N_T2]:
+        print(
+            f"WARNING: H2 T1/T2 n={n_expr} "
+            f"(expected [{EXPECTED_H2_N_T1}, {EXPECTED_H2_N_T2}])"
+        )
+
     lower_err, upper_err = wilson_ci_errors(props, n_expr)
-
-    ent = sub.dropna(subset=["entropy_norm", "t2"])
-    ent_t1 = ent.loc[ent["t2"] == 0, "entropy_norm"].to_numpy()
-    ent_t2 = ent.loc[ent["t2"] == 1, "entropy_norm"].to_numpy()
-    n_ent = [int(ent_t1.size), int(ent_t2.size)]
-
-    labels = ["T1 (2021 disaster)", "T2 (2025 reactivation)"]
+    labels = ["T1 (2021)", "T2 (2025)"]
     colors = [COLOR_T1, COLOR_T2]
 
-    fig, (ax_a, ax_b) = plt.subplots(1, 2, figsize=(10.4, 4.9))
-
-    # Panel A: indirect / mixed expression proportion (95% Wilson CI error bars).
-    bars = ax_a.bar(
+    fig, ax = plt.subplots(figsize=(5.6, 4.8))
+    bars = ax.bar(
         labels,
         props,
         yerr=[lower_err, upper_err],
         capsize=5,
         color=colors,
         edgecolor="#333333",
+        width=0.62,
     )
     top_ci = max(p + ue for p, ue in zip(props, upper_err, strict=True))
-    ax_a.set_ylim(0, top_ci * 1.22)
-    ax_a.set_ylabel("Share of indirect/mixed expression")
-    ax_a.set_title("Panel A. Indirect/mixed expression", fontsize=11)
+    ax.set_ylim(0, max(0.35, top_ci * 1.22))
+    ax.set_ylabel("Share of indirect/mixed expression")
     for bar, p, ue in zip(bars, props, upper_err, strict=True):
-        ax_a.text(
+        ax.text(
             bar.get_x() + bar.get_width() / 2,
             p + ue + top_ci * 0.04,
             f"{p:.1%}",
             ha="center",
             va="bottom",
-            fontsize=9.5,
+            fontsize=11,
             fontweight="bold",
         )
-    ax_a.set_xticks(range(len(labels)))
-    ax_a.set_xticklabels([f"{lab}\nn = {nn:,}" for lab, nn in zip(labels, n_expr, strict=True)])
-    ax_a.grid(axis="y", linestyle=":", alpha=0.4)
-
-    # Panel B: normalized entropy distribution.
-    bp = ax_b.boxplot(
-        [ent_t1, ent_t2],
-        patch_artist=True,
-        showmeans=True,
-        widths=0.55,
-        meanprops={"marker": "D", "markerfacecolor": "white", "markeredgecolor": "#333333"},
-        medianprops={"color": "#222222", "linewidth": 1.4},
-        flierprops={"marker": ".", "markersize": 3, "alpha": 0.25},
+    ax.set_xticks(range(len(labels)))
+    ax.set_xticklabels(
+        [f"{lab}\nn = {nn:,}" for lab, nn in zip(labels, n_expr, strict=True)]
     )
-    for patch, color in zip(bp["boxes"], colors, strict=True):
-        patch.set_facecolor(color)
-        patch.set_alpha(0.7)
-        patch.set_edgecolor("#333333")
-    ax_b.set_ylabel("Normalized topic entropy")
-    ax_b.set_title("Panel B. Normalized topic entropy", fontsize=11)
-    ax_b.set_xticks([1, 2])
-    ax_b.set_xticklabels([f"{lab}\nn = {nn:,}" for lab, nn in zip(labels, n_ent, strict=True)])
-    ax_b.grid(axis="y", linestyle=":", alpha=0.4)
-
-    fig.subplots_adjust(bottom=0.12, top=0.92, wspace=0.28)
+    ax.grid(axis="y", linestyle=":", alpha=0.4)
+    fig.subplots_adjust(bottom=0.16, top=0.92)
     fig.savefig(out_path)
     plt.close(fig)
 
     return {
+        "n_total": n_total,
         "n_expr_t1": n_expr[0],
         "n_expr_t2": n_expr[1],
-        "n_ent_t1": n_ent[0],
-        "n_ent_t2": n_ent[1],
         "prop_indirect_t1": round(props[0], 4),
         "prop_indirect_t2": round(props[1], 4),
-        "entropy_mean_t1": round(float(ent_t1.mean()), 4),
-        "entropy_mean_t2": round(float(ent_t2.mean()), 4),
     }
 
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--input", type=Path, default=PATH_ANALYSIS_ENTROPY)
+    p.add_argument(
+        "--input",
+        type=Path,
+        default=PATH_MODEL_DATA_FINAL
+        if PATH_MODEL_DATA_FINAL.is_file()
+        else PATH_ANALYSIS_TOPICS,
+        help="Prefer model_data_final.csv (remodeled H2 flags); fallback topics table.",
+    )
     args = p.parse_args()
 
     inp = args.input.expanduser().resolve()
     if not inp.is_file():
-        raise SystemExit(f"input not found: {inp}")
+        raise SystemExit(
+            f"input not found: {inp}\n"
+            "Run: uv run python scripts/prepare_model_data.py"
+        )
 
     df = pd.read_csv(inp, dtype={"mid": str})
     OUT_FIGURES.mkdir(parents=True, exist_ok=True)
 
     a1_path = OUT_FIGURES / "fig_A1_sample_construction_flow.png"
-    a2_path = OUT_FIGURES / "fig_A2_t1_t2_expression_entropy.png"
+    # Manuscript Figure 3 / former dual-panel A2 (entropy panel removed).
+    fig3_path = OUT_FIGURES / "fig_3_indirect_expression_by_context.png"
+    a2_path = OUT_FIGURES / "fig_A2_t1_t2_expression.png"
 
     fig_a1_sample_flow(a1_path)
-    stats = fig_a2_t1_t2(df, a2_path)
+    stats = fig_h2_expression_by_context(df, fig3_path)
+    # Keep A2 alias for appendix naming continuity (same single-panel image).
+    shutil.copy2(fig3_path, a2_path)
 
+    # Remove obsolete dual-panel entropy figure if present.
+    obsolete = OUT_FIGURES / "fig_A2_t1_t2_expression_entropy.png"
+    if obsolete.is_file():
+        obsolete.unlink()
+
+    print(f"input -> {inp}")
     print(f"figure A1 -> {a1_path}")
+    print(f"figure 3  -> {fig3_path}")
     print(f"figure A2 -> {a2_path}")
-    print("A2 descriptive stats:")
+    print("H2 descriptive stats (expression only):")
     for k, v in stats.items():
         print(f"  {k}: {v}")
 
