@@ -2,16 +2,23 @@
 
 from __future__ import annotations
 
-import importlib
+import importlib.util
 import sys
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
+SCRIPTS = ROOT / "scripts"
+sys.path.insert(0, str(SCRIPTS))
 
-prep = importlib.import_module("prepare_model_data")
+_spec = importlib.util.spec_from_file_location(
+    "prepare_model_data",
+    SCRIPTS / "03_prepare_model_data.py",
+)
+assert _spec is not None and _spec.loader is not None
+prep = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(prep)
 
 
 def test_prepare_model_data_flags_and_p90():

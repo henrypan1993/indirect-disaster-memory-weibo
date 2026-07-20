@@ -1,4 +1,4 @@
-"""Robustness: H1 components, H2-M2, D1-M2, peripheral thresholds (no entropy grid)."""
+"""Robustness: H1 components, H2-M2, D1-M2, peripheral thresholds."""
 
 from __future__ import annotations
 

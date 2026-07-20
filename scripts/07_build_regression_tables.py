@@ -381,7 +381,7 @@ def main() -> None:
     args = p.parse_args()
 
     df = load_summary(args.input.expanduser().resolve())
-    # Drop legacy entropy / old-id rows if present in a merged dump.
+    # Keep only formal H1 / H2 / D1 model ids if a merged dump is broader.
     formal_ids = set(MODULE_ORDER)
     df = df[df["model_id"].isin(formal_ids)].copy()
 

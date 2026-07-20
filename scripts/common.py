@@ -19,8 +19,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PATH_INPUT_CSV = PROJECT_ROOT / "data" / "input" / "labels_core_cleaned.csv"
 PATH_ANALYSIS_BASE = PROJECT_ROOT / "data" / "processed" / "analysis_ready_base.csv"
 PATH_ANALYSIS_TOPICS = PROJECT_ROOT / "data" / "processed" / "analysis_ready_with_topics.csv"
-# Legacy path only (excluded from formal modeling); kept for local migration helpers.
-PATH_ANALYSIS_ENTROPY = PROJECT_ROOT / "data" / "processed" / "analysis_ready_with_entropy.csv"
 PATH_MODEL_DATA_FINAL = PROJECT_ROOT / "data" / "processed" / "model_data_final.csv"
 PATH_TOPIC_UNIQUE = PROJECT_ROOT / "data" / "processed" / "topic_assignment_unique_texts.csv"
 PATH_TOPIC_EMBEDDINGS = PROJECT_ROOT / "data" / "processed" / "topic_embeddings_unique.npz"
@@ -709,18 +707,10 @@ def load_embedding_cache_arrays(
 
 
 def merge_topics_to_posts(df: pd.DataFrame, unique_topics: pd.DataFrame) -> pd.DataFrame:
-    """Merge topic_id only (formal modeling path)."""
+    """Merge topic_id onto the post-level table."""
     cols = ["text_hash", "topic_id"]
     top = unique_topics[cols].copy()
     return df.merge(top, on="text_hash", how="left")
-
-
-def topics_frame_from_legacy_posts(df: pd.DataFrame) -> pd.DataFrame:
-    """Drop legacy entropy_norm (if present) for the formal topics path."""
-    out = df.copy()
-    if "entropy_norm" in out.columns:
-        out = out.drop(columns=["entropy_norm"])
-    return out
 
 
 def coef_row(

@@ -17,19 +17,11 @@ Public manuscript labels versus repository `model_id` / `spec_id`:
 | D1 | `d1_m1_total_association` | **Main diagnostic:** peripheral without verified/log_followers |
 | D1 | `d1_m2_conditional_threshold` | Conditional: adds verified + log_followers |
 
-## Legacy aliases
+## Former `model_id` aliases
 
-| New `model_id` | Legacy `model_id` |
-|----------------|-------------------|
+| Current `model_id` | Former `model_id` |
+|--------------------|-------------------|
 | `h2_indirect_period` | `h2b_indirect_reactivation` |
 | `d1_indirect_peripheral` | `e1b_indirect_peripheral` |
 
 Sample flag: `disaster_impact_related` (alias of former `narrative_trauma_clean`).
-
-## Excluded legacy outputs
-
-Not part of the public manuscript mapping and not published under `outputs/public/`:
-
-- Entropy diagnostics (`h2a_entropy_reactivation`, `e2_entropy_increment`, `e1a_entropy_peripheral`) — see `legacy/entropy_diagnostics/`
-- Former formal labels D2/D3 as entropy / old peripheral numbering
-- Pre-fix archives under `outputs/models/_archive_pre_control_fix/`

@@ -9,8 +9,6 @@ Formal English appendices for the manuscript.
 | [Appendix_C.md](Appendix_C.md) | Robustness to alternative peripheral thresholds (Table C1) |
 | [Appendix_D.md](Appendix_D.md) | Complete regression results (Tables D1–D3) |
 
-Excluded topic-entropy materials are archived under [`legacy/entropy_diagnostics/`](../legacy/entropy_diagnostics/) and are not part of the formal appendix set.
-
 ## Formal labels (repository mapping)
 
 | Label | Meaning |

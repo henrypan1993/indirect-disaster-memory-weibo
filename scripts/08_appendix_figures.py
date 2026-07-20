@@ -243,7 +243,7 @@ def main() -> None:
     inp = args.input.expanduser().resolve()
     if not inp.is_file():
         raise SystemExit(
-            f"input not found: {inp}\nRun: uv run python scripts/prepare_model_data.py"
+            f"input not found: {inp}\nRun: uv run python scripts/03_prepare_model_data.py"
         )
 
     df = pd.read_csv(inp, dtype={"mid": str})

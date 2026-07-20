@@ -53,7 +53,7 @@ def main() -> None:
         OUT_TABLES / "table_2_label_distribution.csv", index=False, encoding="utf-8-sig"
     )
 
-    # Table 3: core variables (formal modeling path; no entropy_norm)
+    # Table 3: core modeling variables
     num_cols = [
         "log_engagement",
         "log_followers",

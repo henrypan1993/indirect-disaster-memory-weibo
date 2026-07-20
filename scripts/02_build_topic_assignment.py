@@ -1,6 +1,6 @@
-"""Topic assignment on unique texts; merge topic_id to posts (formal path).
+"""Topic assignment on unique texts; merge topic_id to posts.
 
-Writes analysis_ready_with_topics.csv with topic_id only (no entropy_norm).
+Writes analysis_ready_with_topics.csv with topic_id for fixed effects.
 """
 
 from __future__ import annotations
@@ -24,7 +24,6 @@ from common import (
     assign_topics,
     build_unique_corpus,
     merge_topics_to_posts,
-    topics_frame_from_legacy_posts,
     utc_now_iso,
     write_json_report,
 )
@@ -35,13 +34,6 @@ def main() -> None:
     p.add_argument("--input", type=Path, default=PATH_ANALYSIS_BASE)
     p.add_argument("--output-unique", type=Path, default=PATH_TOPIC_UNIQUE)
     p.add_argument("--output-posts", type=Path, default=PATH_ANALYSIS_TOPICS)
-    p.add_argument(
-        "--from-legacy-posts",
-        type=Path,
-        default=None,
-        help="If set, strip optional entropy_norm from a legacy posts table "
-        "instead of recomputing topics (freeze existing topic_id).",
-    )
     p.add_argument(
         "--report",
         type=Path,
@@ -54,26 +46,6 @@ def main() -> None:
 
     out_p = args.output_posts.expanduser().resolve()
     out_p.parent.mkdir(parents=True, exist_ok=True)
-
-    if args.from_legacy_posts is not None:
-        src = args.from_legacy_posts.expanduser().resolve()
-        if not src.is_file():
-            raise SystemExit(f"from-legacy-posts not found: {src}")
-        legacy_df = pd.read_csv(src, dtype={"mid": str})
-        topics_df = topics_frame_from_legacy_posts(legacy_df)
-        topics_df.to_csv(out_p, index=False, encoding="utf-8-sig")
-        report = {
-            "built_at": utc_now_iso(),
-            "mode": "from_legacy_strip",
-            "source_csv": str(src),
-            "posts_csv": str(out_p),
-            "n_rows": len(topics_df),
-            "has_topic_id": "topic_id" in topics_df.columns,
-            "has_entropy_norm": "entropy_norm" in topics_df.columns,
-        }
-        write_json_report(args.report, report)
-        print(f"topics from legacy posts table: {len(topics_df)} rows -> {out_p}")
-        return
 
     inp = args.input.expanduser().resolve()
     if not inp.is_file():
