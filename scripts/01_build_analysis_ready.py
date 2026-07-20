@@ -76,7 +76,6 @@ def build_analysis_ready(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]
         "n_model_sample_h4_indirect": int(out["model_sample_h4_indirect"].sum()),
         "n_robust_no_review": int(out["robust_no_review"].sum()),
         "indirect_clean_na": int(out["indirect_clean"].isna().sum()),
-        "entropy_norm_missing": True,
     }
     return out, stats
 

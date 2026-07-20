@@ -20,9 +20,8 @@ ARCHIVE_DIR = OUT_MODELS / "_archive_pre_control_fix"
 
 AUDIT_MODELS: dict[str, list[str]] = {
     "h1_engagement_indirect": ["indirect_clean"],
-    "h2a_entropy_reactivation": ["t2"],
-    "h2b_indirect_reactivation": ["t2"],
-    "e2_entropy_increment": ["indirect_clean", "entropy_norm"],
+    "h2_indirect_period": ["t2"],
+    "d1_indirect_peripheral": ["peripheral"],
 }
 
 

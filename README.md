@@ -26,13 +26,13 @@ Curated tables: [`outputs/public/`](outputs/public/). Full regression text dumps
 
 | Path | Contents |
 |------|----------|
-| `scripts/` | Pipeline `00`–`09`, `prepare_model_data.py`, and `common.py` |
+| `scripts/` | Pipeline `00`–`07`, `09`, `prepare_model_data.py`, and `common.py` |
 | `tests/` | Unit tests and synthetic fixtures |
 | `outputs/public/` | Curated coefficient tables (H1/H2/D1) |
 | `outputs/models/` | Selected statsmodels text dumps |
 | `appendices/` | Formal English Appendices A–D |
 | `docs/` | Data availability, reproducibility, ethics, model-name mapping |
-| `legacy/entropy_diagnostics/` | Excluded entropy materials (not confirmatory) |
+| `legacy/` | Excluded entropy diagnostics and former Figure-4 script |
 | `data/README.md` | Why analytical microdata are absent |
 
 ## Manuscript mapping
@@ -62,12 +62,15 @@ With restricted input at `data/input/labels_core_cleaned.csv`:
 ```bash
 uv run python scripts/00_check_input.py
 uv run python scripts/01_build_analysis_ready.py
-uv run python scripts/02_build_topic_entropy.py --from-entropy data/processed/analysis_ready_with_entropy.csv
-# or recompute topics: uv run python scripts/02_build_topic_entropy.py
+uv run python scripts/02_build_topic_assignment.py
+# or freeze topics from a legacy posts table:
+# uv run python scripts/02_build_topic_assignment.py --from-legacy-posts path/to/posts.csv
 uv run python scripts/prepare_model_data.py
 uv run python scripts/04_main_models.py
 uv run python scripts/05_robustness_models.py --merge
 ```
+
+Manuscript figures (Figure 3 / A1–A2): `uv run python scripts/07_appendix_figures.py`.
 
 Public curated tables: `uv run python scripts/_build_public_outputs.py` (local helper).
 

@@ -1,4 +1,4 @@
-"""Descriptive tables and exploratory figures."""
+"""Descriptive tables and exploratory figures (not manuscript figure numbers)."""
 
 from __future__ import annotations
 
@@ -53,11 +53,10 @@ def main() -> None:
         OUT_TABLES / "table_2_label_distribution.csv", index=False, encoding="utf-8-sig"
     )
 
-    # Table 3: core variables
+    # Table 3: core variables (formal modeling path; no entropy_norm)
     num_cols = [
         "log_engagement",
         "log_followers",
-        "entropy_norm",
         "text_length",
         "hashtag_count",
         "peripheral",
@@ -68,7 +67,7 @@ def main() -> None:
     desc = main_df[num_cols].describe().T.reset_index(names="variable")
     desc.to_csv(OUT_TABLES / "table_3_core_variables.csv", index=False, encoding="utf-8-sig")
 
-    # Fig 1: narrative by wave x group
+    # Exploratory: narrative by wave x group
     ct = pd.crosstab(
         [main_df["wave"], main_df["account_group"]],
         main_df["label_narrative_clean"],
@@ -78,10 +77,10 @@ def main() -> None:
     ax.set_title("Narrative by wave and account group")
     ax.set_xlabel("wave / account_group")
     fig.tight_layout()
-    fig.savefig(OUT_FIGURES / "fig_1_narrative_by_wave_group.png", dpi=150)
+    fig.savefig(OUT_FIGURES / "exploratory_narrative_by_wave_group.png", dpi=150)
     plt.close(fig)
 
-    # Fig 2: expression by group
+    # Exploratory: expression by group
     fig, ax = plt.subplots(figsize=(8, 5))
     main_df.groupby("account_group")["label_expression_clean"].value_counts(normalize=True).unstack(
         fill_value=0
@@ -89,28 +88,16 @@ def main() -> None:
     ax.set_title("Expression distribution by account group")
     ax.set_ylabel("proportion")
     fig.tight_layout()
-    fig.savefig(OUT_FIGURES / "fig_2_expression_by_group.png", dpi=150)
+    fig.savefig(OUT_FIGURES / "exploratory_expression_by_group.png", dpi=150)
     plt.close(fig)
 
-    # Fig 3: entropy distribution
-    if "entropy_norm" in main_df.columns:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        for grp, sub in main_df.groupby(["wave", "account_group"]):
-            label = f"{grp[0]} / {grp[1]}"
-            sub["entropy_norm"].dropna().plot(kind="kde", ax=ax, label=label)
-        ax.set_title("Entropy distribution")
-        ax.legend(fontsize=7)
-        fig.tight_layout()
-        fig.savefig(OUT_FIGURES / "fig_3_entropy_distribution.png", dpi=150)
-        plt.close(fig)
-
-    # Fig 4: engagement distribution
+    # Exploratory: engagement distribution
     fig, ax = plt.subplots(figsize=(8, 5))
     main_df["log_engagement"].dropna().hist(bins=50, ax=ax, color="steelblue", edgecolor="white")
     ax.set_title("log_engagement distribution (include_main)")
     ax.set_xlabel("log_engagement")
     fig.tight_layout()
-    fig.savefig(OUT_FIGURES / "fig_4_engagement_distribution.png", dpi=150)
+    fig.savefig(OUT_FIGURES / "exploratory_log_engagement_distribution.png", dpi=150)
     plt.close(fig)
 
     print(f"descriptive outputs -> {OUT_TABLES} and {OUT_FIGURES}")

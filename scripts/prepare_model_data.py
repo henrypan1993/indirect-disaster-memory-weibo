@@ -143,10 +143,7 @@ def main() -> None:
 
     inp = args.input.expanduser().resolve()
     if not inp.is_file():
-        raise SystemExit(
-            f"input not found: {inp}\n"
-            "Run scripts/02_build_topic_entropy.py --from-entropy ... first."
-        )
+        raise SystemExit(f"input not found: {inp}\nRun scripts/02_build_topic_assignment.py first.")
 
     df = pd.read_csv(inp, dtype={"mid": str})
     if "topic_id" not in df.columns:

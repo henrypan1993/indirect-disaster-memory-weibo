@@ -1,8 +1,11 @@
-"""Figure 4: engagement return of indirect/mixed expression within peripheral discourse.
+"""LEGACY — former manuscript Figure 4 (engagement return / adjusted predictions).
 
-Reuses the H1 main spec (common.py), refits it, and produces *adjusted* predicted
-log-engagement for Direct vs Indirect/mixed expression via marginal standardization
-(g-computation), with account-clustered bootstrap 95% CIs.
+Not part of the current confirmatory manuscript figure set. Kept for internal
+reproduction only. Formal figures: scripts/07_appendix_figures.py (Figure 3 / A1–A2).
+
+Reuses the H1 main spec, refits it, and produces adjusted predicted log-engagement
+for Direct vs Indirect/mixed via marginal standardization with account-clustered
+bootstrap 95% CIs.
 """
 
 from __future__ import annotations
@@ -19,7 +22,7 @@ import numpy as np
 import pandas as pd
 import patsy
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from common import (
     PATH_ANALYSIS_TOPICS,

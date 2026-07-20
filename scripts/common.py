@@ -19,9 +19,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PATH_INPUT_CSV = PROJECT_ROOT / "data" / "input" / "labels_core_cleaned.csv"
 PATH_ANALYSIS_BASE = PROJECT_ROOT / "data" / "processed" / "analysis_ready_base.csv"
 PATH_ANALYSIS_TOPICS = PROJECT_ROOT / "data" / "processed" / "analysis_ready_with_topics.csv"
+# Legacy path only (excluded from formal modeling); kept for local migration helpers.
 PATH_ANALYSIS_ENTROPY = PROJECT_ROOT / "data" / "processed" / "analysis_ready_with_entropy.csv"
 PATH_MODEL_DATA_FINAL = PROJECT_ROOT / "data" / "processed" / "model_data_final.csv"
-PATH_TOPIC_UNIQUE = PROJECT_ROOT / "data" / "processed" / "topic_entropy_unique_texts.csv"
+PATH_TOPIC_UNIQUE = PROJECT_ROOT / "data" / "processed" / "topic_assignment_unique_texts.csv"
 PATH_TOPIC_EMBEDDINGS = PROJECT_ROOT / "data" / "processed" / "topic_embeddings_unique.npz"
 
 EXPECTED_ROW_COUNT = 17_143
@@ -289,79 +290,11 @@ def composition_or_conditional_specs() -> list[ModelSpec]:
     return [_h2_m2_spec(), _d1_m2_spec()]
 
 
-def legacy_model_specs() -> list[ModelSpec]:
-    """Excluded entropy / old-id specs (not run by default)."""
-    return [
-        ModelSpec(
-            model_id="h2a_entropy_reactivation",
-            module="legacy_H2a",
-            y_col="entropy_norm",
-            x_cols=("t2",),
-            sample_key="h2",
-            fitter="ols",
-            focal_terms=("t2",),
-            control_cols=PERIPHERAL_SAMPLE_CONTROLS,
-            formal_label="",
-            default_spec_id="legacy",
-        ),
-        ModelSpec(
-            model_id="e2_entropy_increment",
-            module="legacy_E2",
-            y_col="log_engagement",
-            x_cols=("indirect_clean", "entropy_norm", "t2"),
-            sample_key="h1",
-            fitter="ols",
-            focal_terms=("indirect_clean", "entropy_norm"),
-            control_cols=PERIPHERAL_SAMPLE_CONTROLS,
-            use_topic_fe=True,
-            extra_report_terms=("t2",),
-            default_spec_id="legacy",
-        ),
-        ModelSpec(
-            model_id="e1a_entropy_peripheral",
-            module="legacy_E1a",
-            y_col="entropy_norm",
-            x_cols=("peripheral", "t2"),
-            sample_key="full_main",
-            fitter="ols",
-            focal_terms=("peripheral",),
-            control_cols=FULL_SAMPLE_CONTROLS,
-            extra_report_terms=("t2",),
-            default_spec_id="legacy",
-        ),
-        ModelSpec(
-            model_id="h2b_indirect_reactivation",
-            module="legacy_H2b",
-            y_col="indirect_clean",
-            x_cols=("t2",),
-            sample_key="h2",
-            fitter="glm",
-            focal_terms=("t2",),
-            control_cols=PERIPHERAL_SAMPLE_CONTROLS,
-            legacy_model_id="h2b_indirect_reactivation",
-            default_spec_id="legacy",
-        ),
-        ModelSpec(
-            model_id="e1b_indirect_peripheral",
-            module="legacy_E1b",
-            y_col="indirect_clean",
-            x_cols=("peripheral", "t2"),
-            sample_key="d1",
-            fitter="glm",
-            focal_terms=("peripheral",),
-            control_cols=FULL_SAMPLE_CONTROLS,
-            extra_report_terms=("t2",),
-            legacy_model_id="e1b_indirect_peripheral",
-            default_spec_id="legacy",
-        ),
-    ]
-
-
 def all_known_specs() -> list[ModelSpec]:
+    """Formal confirmatory + composition/conditional specs only."""
     return [
         *main_model_specs(),
         *composition_or_conditional_specs(),
-        *legacy_model_specs(),
     ]
 
 
@@ -394,16 +327,13 @@ def appendix_without_t2_specs() -> list[ModelSpec]:
 
 
 def spec_by_model_id(model_id: str, *, prefer_main: bool = True) -> ModelSpec:
-    """Resolve a ModelSpec by model_id (main/composition first, then legacy)."""
-    # Old ids resolve to current primary models before matching legacy stubs.
+    """Resolve a ModelSpec by model_id (main/composition only; legacy ids remapped)."""
+    del prefer_main  # kept for call-site compatibility
+    # Old ids resolve to current primary models.
     for new_id, old_id in LEGACY_MODEL_IDS.items():
         if model_id == old_id:
-            return spec_by_model_id(new_id, prefer_main=prefer_main)
-    pools = (
-        [*main_model_specs(), *composition_or_conditional_specs(), *legacy_model_specs()]
-        if prefer_main
-        else [*legacy_model_specs(), *main_model_specs(), *composition_or_conditional_specs()]
-    )
+            return spec_by_model_id(new_id)
+    pools = [*main_model_specs(), *composition_or_conditional_specs()]
     # Prefer default_spec_id that is the primary for that id
     primary = {
         "h1_engagement_indirect": "main",
@@ -668,13 +598,7 @@ def softmax_rows(sim: np.ndarray, tau: float) -> np.ndarray:
     return exp / exp.sum(axis=1, keepdims=True)
 
 
-def entropy_norm_from_probs(probs: np.ndarray, k: int) -> np.ndarray:
-    p = np.clip(probs, 1e-12, 1.0)
-    ent = -np.sum(p * np.log(p), axis=1)
-    return ent / np.log(k)
-
-
-def compute_topic_entropy(
+def assign_topics(
     texts: list[str],
     *,
     k: int = DEFAULT_K,
@@ -683,6 +607,7 @@ def compute_topic_entropy(
     embeddings: np.ndarray | None = None,
     model_name: str = DEFAULT_EMBED_MODEL,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Softmax–KMeans topic assignment; returns topic_id only (formal path)."""
     if embeddings is None:
         from sentence_transformers import SentenceTransformer
 
@@ -706,13 +631,11 @@ def compute_topic_entropy(
 
     sim = embeddings @ centers.T
     probs = softmax_rows(sim, tau)
-    ent = entropy_norm_from_probs(probs, k)
     topic_id = probs.argmax(axis=1)
 
     result = pd.DataFrame(
         {
             "topic_id": topic_id.astype(int),
-            "entropy_norm": ent,
             "k": k,
             "tau": tau,
         }
@@ -721,9 +644,6 @@ def compute_topic_entropy(
         "n_texts": len(texts),
         "k": k,
         "tau": tau,
-        "entropy_min": float(ent.min()),
-        "entropy_max": float(ent.max()),
-        "entropy_mean": float(ent.mean()),
         "topic_counts": {str(i): int((topic_id == i).sum()) for i in range(k)},
     }
     return result, meta
@@ -746,7 +666,7 @@ def ensure_embedding_cache(
     model_name: str = DEFAULT_EMBED_MODEL,
     cache_path: Path = PATH_TOPIC_EMBEDDINGS,
 ) -> np.ndarray:
-    """Build or load unique-text embeddings (for entropy robustness specs)."""
+    """Build or load unique-text embeddings for topic assignment."""
     uniq = build_unique_corpus(base_df)
     cached = load_embedding_cache_arrays(uniq, cache_path=cache_path)
     if cached is not None:
@@ -788,21 +708,15 @@ def load_embedding_cache_arrays(
     return emb[idx]
 
 
-def merge_entropy_to_posts(df: pd.DataFrame, unique_entropy: pd.DataFrame) -> pd.DataFrame:
-    cols = ["text_hash", "topic_id", "entropy_norm"]
-    ent = unique_entropy[[c for c in cols if c in unique_entropy.columns]].copy()
-    return df.merge(ent, on="text_hash", how="left")
-
-
 def merge_topics_to_posts(df: pd.DataFrame, unique_topics: pd.DataFrame) -> pd.DataFrame:
-    """Merge topic_id only (formal modeling path; no entropy_norm)."""
+    """Merge topic_id only (formal modeling path)."""
     cols = ["text_hash", "topic_id"]
     top = unique_topics[cols].copy()
     return df.merge(top, on="text_hash", how="left")
 
 
-def topics_frame_from_entropy_posts(df: pd.DataFrame) -> pd.DataFrame:
-    """Drop entropy_norm from a with_entropy posts table for the formal topics path."""
+def topics_frame_from_legacy_posts(df: pd.DataFrame) -> pd.DataFrame:
+    """Drop legacy entropy_norm (if present) for the formal topics path."""
     out = df.copy()
     if "entropy_norm" in out.columns:
         out = out.drop(columns=["entropy_norm"])

@@ -185,10 +185,7 @@ def fig_h2_expression_by_context(df: pd.DataFrame, out_path: Path) -> dict[str, 
     props = [float(grp.loc[0, "mean"]), float(grp.loc[1, "mean"])]
     n_expr = [int(grp.loc[0, "count"]), int(grp.loc[1, "count"])]
     if n_expr != [EXPECTED_H2_N_T1, EXPECTED_H2_N_T2]:
-        print(
-            f"WARNING: H2 T1/T2 n={n_expr} "
-            f"(expected [{EXPECTED_H2_N_T1}, {EXPECTED_H2_N_T2}])"
-        )
+        print(f"WARNING: H2 T1/T2 n={n_expr} (expected [{EXPECTED_H2_N_T1}, {EXPECTED_H2_N_T2}])")
 
     lower_err, upper_err = wilson_ci_errors(props, n_expr)
     labels = ["T1 (2021)", "T2 (2025)"]
@@ -218,9 +215,7 @@ def fig_h2_expression_by_context(df: pd.DataFrame, out_path: Path) -> dict[str, 
             fontweight="bold",
         )
     ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(
-        [f"{lab}\nn = {nn:,}" for lab, nn in zip(labels, n_expr, strict=True)]
-    )
+    ax.set_xticklabels([f"{lab}\nn = {nn:,}" for lab, nn in zip(labels, n_expr, strict=True)])
     ax.grid(axis="y", linestyle=":", alpha=0.4)
     fig.subplots_adjust(bottom=0.16, top=0.92)
     fig.savefig(out_path)
@@ -240,9 +235,7 @@ def main() -> None:
     p.add_argument(
         "--input",
         type=Path,
-        default=PATH_MODEL_DATA_FINAL
-        if PATH_MODEL_DATA_FINAL.is_file()
-        else PATH_ANALYSIS_TOPICS,
+        default=PATH_MODEL_DATA_FINAL if PATH_MODEL_DATA_FINAL.is_file() else PATH_ANALYSIS_TOPICS,
         help="Prefer model_data_final.csv (remodeled H2 flags); fallback topics table.",
     )
     args = p.parse_args()
@@ -250,15 +243,14 @@ def main() -> None:
     inp = args.input.expanduser().resolve()
     if not inp.is_file():
         raise SystemExit(
-            f"input not found: {inp}\n"
-            "Run: uv run python scripts/prepare_model_data.py"
+            f"input not found: {inp}\nRun: uv run python scripts/prepare_model_data.py"
         )
 
     df = pd.read_csv(inp, dtype={"mid": str})
     OUT_FIGURES.mkdir(parents=True, exist_ok=True)
 
     a1_path = OUT_FIGURES / "fig_A1_sample_construction_flow.png"
-    # Manuscript Figure 3 / former dual-panel A2 (entropy panel removed).
+    # Manuscript Figure 3 / appendix A2 (single panel).
     fig3_path = OUT_FIGURES / "fig_3_indirect_expression_by_context.png"
     a2_path = OUT_FIGURES / "fig_A2_t1_t2_expression.png"
 
@@ -266,12 +258,6 @@ def main() -> None:
     stats = fig_h2_expression_by_context(df, fig3_path)
     # Keep A2 alias for appendix naming continuity (same single-panel image).
     shutil.copy2(fig3_path, a2_path)
-
-    # Remove obsolete dual-panel entropy figure if present.
-    obsolete = OUT_FIGURES / "fig_A2_t1_t2_expression_entropy.png"
-    if obsolete.is_file():
-        obsolete.unlink()
-
     print(f"input -> {inp}")
     print(f"figure A1 -> {a1_path}")
     print(f"figure 3  -> {fig3_path}")

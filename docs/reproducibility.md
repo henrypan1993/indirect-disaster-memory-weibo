@@ -11,18 +11,18 @@
 ```text
 labels_core_cleaned
 → 01_build_analysis_ready
-→ 02 topic assignment → analysis_ready_with_topics.csv
+→ 02_build_topic_assignment → analysis_ready_with_topics.csv
 → prepare_model_data.py → model_data_final.csv
 → 04_main_models (H1, H2-M1, D1-M1)
 → 05_robustness_models (H1 components, H2-M2, D1-M2, peripheral thresholds)
+→ 07_appendix_figures (manuscript Figure 3 / A1–A2)
 ```
 
-Do not use `analysis_ready_with_entropy.csv` as the formal modeling entry point. Entropy columns belong to the excluded legacy path (`legacy/entropy_diagnostics/`).
+Topic assignment supplies `topic_id` for fixed effects only. Do not use legacy `analysis_ready_with_entropy.csv` or entropy model IDs as formal modeling inputs (`legacy/entropy_diagnostics/`).
 
 ## Seeds
 
 - Topic K-Means: `random_state=42` in `scripts/common.py`
-- Figure-4 bootstrap (if used): `--seed 12345` in `scripts/08_fig4_engagement_return.py`
 
 ## Curated public tables
 
@@ -36,4 +36,4 @@ Internal old-vs-new audits: `outputs/reports/` (not published as confirmatory re
 
 ## Figures
 
-No figure binaries are shipped in the current public tree. Manuscript figures must be regenerated and privacy-reviewed before any future binary release.
+No figure binaries are shipped in the current public tree. Manuscript figures must be regenerated and privacy-reviewed before any future binary release. Former engagement-return Figure 4 code lives under `legacy/fig4_engagement_return.py` and is not part of the formal figure set.
