@@ -61,6 +61,7 @@ MODEL_DATA_COLS = (
     "high_clarity",
     "needs_manual_review",
     "sample_h1_eligible",
+    "sample_h1_broader_eligible",
     "sample_h2_eligible",
     "sample_d1_eligible",
     "p90_followers",
@@ -104,10 +105,17 @@ def prepare_model_data(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
     out["narrative_trauma_clean"] = out["disaster_impact_related"]
 
     expr_ok = out["indirect_clean"].notna()
-    out["sample_h1_eligible"] = include & (out["peripheral"] == 1) & expr_ok
-    out["sample_h2_eligible"] = (
-        include & (out["peripheral"] == 1) & (out["disaster_impact_related"] == 1) & expr_ok
+    core = (
+        include
+        & (out["peripheral"] == 1)
+        & (out["disaster_impact_related"] == 1)
+        & expr_ok
     )
+    # H1/H2 share the disaster-impact × peripheral core sample.
+    out["sample_h1_eligible"] = core
+    out["sample_h2_eligible"] = core
+    # Broader peripheral-only sample retained for appendix robustness.
+    out["sample_h1_broader_eligible"] = include & (out["peripheral"] == 1) & expr_ok
     out["sample_d1_eligible"] = include & expr_ok
 
     # Keep whitelist columns that exist
@@ -122,6 +130,7 @@ def prepare_model_data(df: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
         "p90_followers": p90,
         "n_peripheral_include": int(peripheral[include].sum()),
         "n_sample_h1_eligible": int(out["sample_h1_eligible"].sum()),
+        "n_sample_h1_broader_eligible": int(out["sample_h1_broader_eligible"].sum()),
         "n_sample_h2_eligible": int(out["sample_h2_eligible"].sum()),
         "n_sample_d1_eligible": int(out["sample_d1_eligible"].sum()),
         "n_relative_window_day_na": int(out["relative_window_day"].isna().sum()),
@@ -159,6 +168,7 @@ def main() -> None:
     print(
         f"model_data_final: {len(frozen)} rows -> {out} "
         f"(h1={report['n_sample_h1_eligible']}, "
+        f"h1_broader={report['n_sample_h1_broader_eligible']}, "
         f"h2={report['n_sample_h2_eligible']}, "
         f"d1={report['n_sample_d1_eligible']})"
     )

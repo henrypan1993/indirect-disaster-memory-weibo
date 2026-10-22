@@ -1,0 +1,3 @@
+formal_label,spec_id,role,term,coef,se,pvalue,pct_change,n,coef_display
+H1,main,main,indirect_clean,0.1230280911155136,0.0350437542670538,0.0004469292821508,13.09161891985915,5846,0.123*** (0.035)
+H1,h1_m2_composition,composition_adjustment,indirect_clean,0.0994654482689071,0.0359398811135843,0.0056479235034734,10.45803049189431,5804,0.099** (0.036)

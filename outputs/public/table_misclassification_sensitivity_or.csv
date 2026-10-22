@@ -1,0 +1,5 @@
+scenario,uncertainty,n_reps,median_or,p2_5,p97_5,share_or_above_1
+validation_differential,imputation_at_fixed_rates,80,3.39367276355141,2.991414166270515,3.808963449589016,1.0
+pooled_nondifferential,imputation_at_fixed_rates,80,3.1570046417613282,2.81874072506718,3.6051463560403136,1.0
+sensitivity_0.80_validation_fpr,imputation_at_fixed_rates,80,2.541278506006379,2.320120185851251,2.9108772967080156,1.0
+validation_differential,bootstrap_rates_and_imputation,192,3.290920646757429,0.691665893864701,27.761484723574927,0.9479166666666666

@@ -83,9 +83,22 @@ CONTROL_COLS = list(FULL_SAMPLE_CONTROLS)
 TRAUMA_NARRATIVES_CLEAN = frozenset({"Trauma-Help-Loss", "Memory-Reactivation"})
 DISASTER_IMPACT_NARRATIVES = TRAUMA_NARRATIVES_CLEAN
 
+# Exploratory emotion polarity (Peripheral × Indirect/Mixed composition analysis).
+EMOTION_POLARITY_MAP: dict[str, str] = {
+    "Anger": "negative",
+    "Fear-Anxiety": "negative",
+    "Sadness-Grief": "negative",
+    "Fear-Anger": "negative",
+    "Sadness": "negative",
+    "Hope": "positive",
+    "Neutral-Informational": "neutral",
+    "Mixed-Ambivalent": "mixed",
+}
+
 FitterName = Literal["ols", "glm"]
 SampleKey = Literal[
     "h1",
+    "h1_broader",
     "h2",
     "d1",
     "peripheral",
@@ -98,6 +111,35 @@ LEGACY_MODEL_IDS = {
     "h2_indirect_period": "h2b_indirect_reactivation",
     "d1_indirect_peripheral": "e1b_indirect_peripheral",
 }
+
+# Qualitative sampling / joint display (paper H1/H2). Legacy model_id values are unchanged.
+SEMANTIC_ANALYSIS_IDS: dict[str, dict[str, str | None]] = {
+    "period_to_indirect": {
+        "paper_label": "H1",
+        "legacy_model_id": "h2_indirect_period",
+        "meaning": "Risk context (T2) -> Indirect/Mixed expression",
+    },
+    "indirect_to_engagement": {
+        "paper_label": "H2",
+        "legacy_model_id": "h1_engagement_indirect",
+        "meaning": "Indirect/Mixed expression -> engagement",
+    },
+    "composition_exploration": {
+        "paper_label": None,
+        "legacy_model_id": None,
+        "meaning": "Exploratory peripheral Indirect/Mixed composition (script 11)",
+    },
+}
+
+QUALITATIVE_EXCLUSION_REASONS = frozenset(
+    {
+        "duplicate_redundant_discourse",
+        "insufficient_analyzable_text",
+        "account_duplication",
+        "coding_ambiguity",
+        "maximum_variation_balancing",
+    }
+)
 
 
 class ClusterCovarianceError(RuntimeError):
@@ -152,30 +194,44 @@ def build_formula(spec: ModelSpec, *, y_col: str | None = None) -> str:
     return f"{y} ~ {rhs}"
 
 
+def _disaster_impact_series(df: pd.DataFrame) -> pd.Series:
+    if "disaster_impact_related" in df.columns:
+        return df["disaster_impact_related"]
+    if "narrative_trauma_clean" in df.columns:
+        return df["narrative_trauma_clean"]
+    narr = df["label_narrative_clean"].astype("string")
+    return narr.isin(TRAUMA_NARRATIVES_CLEAN).astype(int)
+
+
 def apply_sample_mask(df: pd.DataFrame, sample_key: SampleKey) -> pd.DataFrame:
     """Prefer frozen eligible flags from model_data_final; fall back to legacy masks."""
     if sample_key == "h1":
         if "sample_h1_eligible" in df.columns:
             return df.loc[df["sample_h1_eligible"]].copy()
-        return df.loc[df["model_sample_h2"]].copy()
+        impact = _disaster_impact_series(df)
+        expr_ok = df["indirect_clean"].notna()
+        return df.loc[
+            (df["include_main"] == 1) & (df["peripheral"] == 1) & (impact == 1) & expr_ok
+        ].copy()
+    if sample_key == "h1_broader":
+        if "sample_h1_broader_eligible" in df.columns:
+            return df.loc[df["sample_h1_broader_eligible"]].copy()
+        if "model_sample_h2" in df.columns:
+            return df.loc[df["model_sample_h2"]].copy()
+        expr_ok = df["indirect_clean"].notna()
+        return df.loc[(df["include_main"] == 1) & (df["peripheral"] == 1) & expr_ok].copy()
     if sample_key == "h2":
         if "sample_h2_eligible" in df.columns:
             return df.loc[df["sample_h2_eligible"]].copy()
-        impact = (
-            df["disaster_impact_related"]
-            if "disaster_impact_related" in df.columns
-            else df["narrative_trauma_clean"]
-        )
+        impact = _disaster_impact_series(df)
         return df.loc[(df["include_main"] == 1) & (df["peripheral"] == 1) & (impact == 1)].copy()
     if sample_key == "d1":
         if "sample_d1_eligible" in df.columns:
             return df.loc[df["sample_d1_eligible"]].copy()
         return df.loc[df["model_sample_h1_indirect"]].copy()
-    # Legacy keys
+    # Legacy keys: "peripheral" maps to broader peripheral sample (not the H1 core).
     if sample_key == "peripheral":
-        if "sample_h1_eligible" in df.columns:
-            return df.loc[df["sample_h1_eligible"]].copy()
-        return df.loc[df["model_sample_h2"]].copy()
+        return apply_sample_mask(df, "h1_broader")
     if sample_key == "trauma_peripheral":
         return apply_sample_mask(df, "h2")
     if sample_key == "full_main":
@@ -187,6 +243,7 @@ def apply_sample_mask(df: pd.DataFrame, sample_key: SampleKey) -> pd.DataFrame:
 
 
 def _h1_spec() -> ModelSpec:
+    """H1 Model 1 (main): engagement ~ indirect on disaster-impact × peripheral core."""
     return ModelSpec(
         model_id="h1_engagement_indirect",
         module="H1",
@@ -200,6 +257,84 @@ def _h1_spec() -> ModelSpec:
         extra_report_terms=("t2",),
         formal_label="H1",
         default_spec_id="main",
+    )
+
+
+def _expectation_engagement_spec() -> ModelSpec:
+    """Expectation model for residual case selection (same formula as H1-M1)."""
+    return ModelSpec(
+        model_id="expectation_engagement_expression",
+        module="Expectation",
+        y_col="log_engagement",
+        x_cols=("indirect_clean", "t2"),
+        sample_key="h1",
+        fitter="ols",
+        focal_terms=("indirect_clean",),
+        control_cols=PERIPHERAL_SAMPLE_CONTROLS,
+        use_topic_fe=True,
+        extra_report_terms=("t2",),
+        formal_label="Expectation",
+        default_spec_id="expectation_main",
+    )
+
+
+def _expectation_engagement_relative_day_spec() -> ModelSpec:
+    """Robustness expectation: main + relative_window_day (rank-stability only)."""
+    return ModelSpec(
+        model_id="expectation_engagement_expression",
+        module="Expectation",
+        y_col="log_engagement",
+        x_cols=("indirect_clean", "t2"),
+        sample_key="h1",
+        fitter="ols",
+        focal_terms=("indirect_clean",),
+        control_cols=PERIPHERAL_SAMPLE_CONTROLS,
+        use_topic_fe=True,
+        extra_controls=("relative_window_day",),
+        extra_report_terms=("t2",),
+        formal_label="Expectation",
+        default_spec_id="expectation_with_relative_day",
+    )
+
+
+def _h1_m2_spec() -> ModelSpec:
+    """H1 Model 2: composition adjustment (+ narrative, emotion, relative window day)."""
+    return ModelSpec(
+        model_id="h1_engagement_indirect",
+        module="H1",
+        y_col="log_engagement",
+        x_cols=("indirect_clean", "t2"),
+        sample_key="h1",
+        fitter="ols",
+        focal_terms=("indirect_clean",),
+        control_cols=PERIPHERAL_SAMPLE_CONTROLS,
+        use_topic_fe=True,
+        categorical_cols=(
+            ("label_narrative_clean", REF_NARRATIVE),
+            ("label_emotion_clean", REF_EMOTION),
+        ),
+        extra_controls=("relative_window_day",),
+        extra_report_terms=("t2",),
+        formal_label="H1",
+        default_spec_id="h1_m2_composition",
+    )
+
+
+def _h1_broader_spec() -> ModelSpec:
+    """Appendix: broader-sample robustness (all peripheral posts, any narrative)."""
+    return ModelSpec(
+        model_id="h1_engagement_indirect",
+        module="H1",
+        y_col="log_engagement",
+        x_cols=("indirect_clean", "t2"),
+        sample_key="h1_broader",
+        fitter="ols",
+        focal_terms=("indirect_clean",),
+        control_cols=PERIPHERAL_SAMPLE_CONTROLS,
+        use_topic_fe=True,
+        extra_report_terms=("t2",),
+        formal_label="H1",
+        default_spec_id="h1_broader_sample",
     )
 
 
@@ -284,15 +419,21 @@ def main_model_specs() -> list[ModelSpec]:
 
 
 def composition_or_conditional_specs() -> list[ModelSpec]:
-    """H2-M2 composition adjustment and D1-M2 conditional threshold."""
-    return [_h2_m2_spec(), _d1_m2_spec()]
+    """H1-M2 / H2-M2 composition adjustment and D1-M2 conditional threshold."""
+    return [_h1_m2_spec(), _h2_m2_spec(), _d1_m2_spec()]
+
+
+def broader_sample_specs() -> list[ModelSpec]:
+    """Appendix: H1 estimated on all peripheral posts (any narrative)."""
+    return [_h1_broader_spec()]
 
 
 def all_known_specs() -> list[ModelSpec]:
-    """Formal confirmatory + composition/conditional specs only."""
+    """Formal confirmatory + composition/conditional + broader-sample specs."""
     return [
         *main_model_specs(),
         *composition_or_conditional_specs(),
+        *broader_sample_specs(),
     ]
 
 
@@ -353,6 +494,14 @@ def spec_by_model_id(model_id: str, *, prefer_main: bool = True) -> ModelSpec:
 def spec_by_spec_id(spec_id: str) -> ModelSpec:
     if spec_id == "main":
         return _h1_spec()
+    if spec_id == "h1_m2_composition":
+        return _h1_m2_spec()
+    if spec_id == "h1_broader_sample":
+        return _h1_broader_spec()
+    if spec_id == "expectation_main":
+        return _expectation_engagement_spec()
+    if spec_id == "expectation_with_relative_day":
+        return _expectation_engagement_relative_day_spec()
     for spec in all_known_specs():
         if spec.default_spec_id == spec_id:
             return spec
@@ -399,6 +548,12 @@ def narrative_trauma_clean(series: pd.Series) -> pd.Series:
 def disaster_impact_related(series: pd.Series) -> pd.Series:
     """Alias for disaster-impact / trauma-help narratives used in H2 sample."""
     return narrative_trauma_clean(series)
+
+
+def emotion_polarity_series(series: pd.Series) -> pd.Series:
+    """Map clean emotion labels to polarity; unmapped → NA (string dtype)."""
+    mapped = series.astype("string").map(EMOTION_POLARITY_MAP)
+    return mapped.astype("string")
 
 
 def relative_window_day_series(

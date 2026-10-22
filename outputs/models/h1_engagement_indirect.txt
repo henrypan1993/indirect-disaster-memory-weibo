@@ -1,50 +1,50 @@
 === Pre-fit diagnostics ===
 formula: log_engagement ~ indirect_clean + t2 + log_followers + post_hour_cst + hashtag_count + text_length + C(topic_id, Treatment(reference='0'))
-n_obs=10806, n_accounts=9897
+n_obs=5846, n_accounts=5476
 design_matrix_rank=16, n_params=16
-condition_number=5193
+condition_number=5757
 zero_variance_cols=none
 rank_deficient=False
 === Model summary ===
 
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:         log_engagement   R-squared:                       0.111
-Model:                            OLS   Adj. R-squared:                  0.110
-Method:                 Least Squares   F-statistic:                     63.69
-Date:                Fri, 17 Jul 2026   Prob (F-statistic):          7.13e-185
-Time:                        14:11:49   Log-Likelihood:                -14096.
-No. Observations:               10806   AIC:                         2.822e+04
-Df Residuals:                   10790   BIC:                         2.834e+04
+Dep. Variable:         log_engagement   R-squared:                       0.116
+Model:                            OLS   Adj. R-squared:                  0.114
+Method:                 Least Squares   F-statistic:                     39.14
+Date:                Sun, 02 Aug 2026   Prob (F-statistic):          2.42e-109
+Time:                        14:30:55   Log-Likelihood:                -7745.2
+No. Observations:                5846   AIC:                         1.552e+04
+Df Residuals:                    5830   BIC:                         1.563e+04
 Df Model:                          15                                         
 Covariance Type:              cluster                                         
 ==============================================================================================================
                                                  coef    std err          z      P>|z|      [0.025      0.975]
 --------------------------------------------------------------------------------------------------------------
-Intercept                                      0.1660      0.074      2.247      0.025       0.021       0.311
-C(topic_id, Treatment(reference='0'))[T.1]     0.1998      0.069      2.887      0.004       0.064       0.336
-C(topic_id, Treatment(reference='0'))[T.2]    -0.4266      0.070     -6.059      0.000      -0.565      -0.289
-C(topic_id, Treatment(reference='0'))[T.3]     0.1131      0.072      1.569      0.117      -0.028       0.254
-C(topic_id, Treatment(reference='0'))[T.4]    -0.3409      0.101     -3.361      0.001      -0.540      -0.142
-C(topic_id, Treatment(reference='0'))[T.5]    -0.2103      0.070     -3.021      0.003      -0.347      -0.074
-C(topic_id, Treatment(reference='0'))[T.6]    -0.4445      0.096     -4.610      0.000      -0.633      -0.256
-C(topic_id, Treatment(reference='0'))[T.7]    -0.3674      0.099     -3.709      0.000      -0.562      -0.173
-C(topic_id, Treatment(reference='0'))[T.8]    -0.1583      0.068     -2.328      0.020      -0.292      -0.025
-C(topic_id, Treatment(reference='0'))[T.9]    -0.0883      0.067     -1.312      0.189      -0.220       0.044
-indirect_clean                                 0.1323      0.029      4.499      0.000       0.075       0.190
-t2                                            -0.1814      0.023     -7.885      0.000      -0.226      -0.136
-log_followers                                  0.0829      0.005     16.560      0.000       0.073       0.093
-post_hour_cst                                  0.0004      0.001      0.271      0.787      -0.002       0.003
-hashtag_count                                  0.0352      0.011      3.274      0.001       0.014       0.056
-text_length                                    0.0003   7.11e-05      3.954      0.000       0.000       0.000
+Intercept                                      0.1967      0.107      1.831      0.067      -0.014       0.407
+C(topic_id, Treatment(reference='0'))[T.1]     0.0713      0.100      0.709      0.478      -0.126       0.268
+C(topic_id, Treatment(reference='0'))[T.2]    -0.6074      0.104     -5.829      0.000      -0.812      -0.403
+C(topic_id, Treatment(reference='0'))[T.3]     0.0137      0.104      0.131      0.896      -0.191       0.218
+C(topic_id, Treatment(reference='0'))[T.4]    -0.0027      0.367     -0.007      0.994      -0.721       0.716
+C(topic_id, Treatment(reference='0'))[T.5]    -0.2902      0.107     -2.718      0.007      -0.499      -0.081
+C(topic_id, Treatment(reference='0'))[T.6]    -0.7318      0.157     -4.649      0.000      -1.040      -0.423
+C(topic_id, Treatment(reference='0'))[T.7]    -0.4175      0.139     -3.010      0.003      -0.689      -0.146
+C(topic_id, Treatment(reference='0'))[T.8]    -0.2327      0.103     -2.249      0.025      -0.436      -0.030
+C(topic_id, Treatment(reference='0'))[T.9]    -0.2299      0.099     -2.333      0.020      -0.423      -0.037
+indirect_clean                                 0.1230      0.035      3.511      0.000       0.054       0.192
+t2                                            -0.1459      0.033     -4.481      0.000      -0.210      -0.082
+log_followers                                  0.1001      0.007     14.505      0.000       0.087       0.114
+post_hour_cst                                  0.0013      0.002      0.675      0.500      -0.002       0.005
+hashtag_count                                  0.0386      0.013      2.994      0.003       0.013       0.064
+text_length                                    0.0002   8.38e-05      2.479      0.013    4.35e-05       0.000
 ==============================================================================
-Omnibus:                     5427.858   Durbin-Watson:                   1.937
-Prob(Omnibus):                  0.000   Jarque-Bera (JB):            41152.848
-Skew:                           2.303   Prob(JB):                         0.00
-Kurtosis:                      11.378   Cond. No.                     5.19e+03
+Omnibus:                     2509.811   Durbin-Watson:                   1.896
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            13672.255
+Skew:                           2.011   Prob(JB):                         0.00
+Kurtosis:                       9.321   Cond. No.                     5.76e+03
 ==============================================================================
 
 Notes:
 [1] Standard Errors are robust to cluster correlation (cluster)
-[2] The condition number is large, 5.19e+03. This might indicate that there are
+[2] The condition number is large, 5.76e+03. This might indicate that there are
 strong multicollinearity or other numerical problems.

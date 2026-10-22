@@ -19,6 +19,7 @@ models/
 data/input/
 data/processed/
 data/reports/
+data/restricted/
 
 # Internal Chinese drafts (outside public Git history)
 finding/
@@ -31,6 +32,7 @@ outputs/tables/
 outputs/figures/
 outputs/models/
 outputs/reports/
+outputs/cases/
 
 # Allow curated public release tables only
 !outputs/public/

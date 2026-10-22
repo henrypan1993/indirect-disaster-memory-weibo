@@ -40,14 +40,16 @@ plt.rcParams.update(
 COLOR_T1 = "#6b9ac4"
 COLOR_T2 = "#d98a5f"
 
-# Fixed pipeline counts and stage descriptions (Appendix A.4).
+# Fixed pipeline counts and stage descriptions (Appendix A, Table A2).
 FLOW_STAGES: tuple[tuple[str, str], ...] = (
-    ("62,513", "Historical retrieval\n(deduplicated by mid)"),
-    ("38,980", "show_batch status backfill\n(available records)"),
-    ("39,654", "Analysis-ready wide table\n(merge & field alignment)"),
-    ("24,796", "Visible subset\n(Gate LLM input)"),
-    ("17,143", "Gate pass\n(relevant & relevance score = 2)"),
-    ("17,143", "Core annotation & cleaning\n(main analysis sample)"),
+    ("63,858", "Retrieval entries\n(seven keyword-date windows)"),
+    ("62,513", "Unique post IDs\n(deduplicated across windows)"),
+    ("38,980", "11 April 2026 backfill\n(882 API calls)"),
+    ("674", "Retained 10 April statuses\n(39 batch files, no ID overlap)"),
+    ("39,654", "Consolidated posts\n(both backfill sets)"),
+    ("24,801", "Visible posts\n(state_code = 0)"),
+    ("24,796", "Gate input\n(nonempty text, no pending review)"),
+    ("17,143", "Core corpus\n(relevance 1 and score 2)"),
 )
 
 SURVIVOR_NOTE = (
@@ -80,7 +82,7 @@ def wilson_ci_errors(
 
 def fig_a1_sample_flow(out_path: Path) -> None:
     n = len(FLOW_STAGES)
-    fig, ax = plt.subplots(figsize=(8.6, 10.0))
+    fig, ax = plt.subplots(figsize=(8.6, 13.2))
     ax.set_xlim(0, 12)
     ax.set_ylim(0, n * 2 + 1.6)
     ax.axis("off")
@@ -131,19 +133,6 @@ def fig_a1_sample_flow(out_path: Path) -> None:
                     color="#555555",
                 )
             )
-
-    y_mid = (y_positions[1] + y_positions[2]) / 2
-    ax.annotate(
-        "Non-monotonic step (+674):\nengineering merge & record\nalignment, not new collection",
-        xy=(x_center + box_w / 2, y_mid),
-        xytext=(x_center + box_w / 2 + 0.5, y_mid),
-        ha="left",
-        va="center",
-        fontsize=8.0,
-        style="italic",
-        color="#b5532a",
-        arrowprops={"arrowstyle": "-", "color": "#b5532a", "linewidth": 0.9},
-    )
 
     fig.text(
         0.5,

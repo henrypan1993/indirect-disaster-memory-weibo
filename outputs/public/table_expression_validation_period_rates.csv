@@ -1,0 +1,4 @@
+period,n_gold_indirect,n_gold_direct,true_positive,false_positive,sensitivity,false_positive_rate
+T1,18,97,9,4,0.5,0.041237113402061855
+T2,17,62,9,1,0.5294117647058824,0.016129032258064516
+pooled,35,159,18,5,0.5142857142857142,0.031446540880503145

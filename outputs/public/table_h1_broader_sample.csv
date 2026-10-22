@@ -1,0 +1,2 @@
+formal_label,spec_id,role,term,coef,se,pvalue,pct_change,n,coef_display
+H1,h1_broader_sample,broader_sample_robustness,indirect_clean,0.1322504696495472,0.0293953181788499,6.826366440515378e-06,14.1394168064787,10806,0.132*** (0.029)

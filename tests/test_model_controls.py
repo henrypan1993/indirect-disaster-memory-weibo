@@ -78,6 +78,52 @@ def test_h1_peripheral_controls_exclude_verified():
     assert "verified" not in formula
     assert "indirect_clean" in formula
     assert "C(topic_id" in formula
+    assert spec.sample_key == "h1"
+    assert "label_narrative_clean" not in formula
+    assert "relative_window_day" not in formula
+
+
+def test_h1_m2_has_composition_controls():
+    spec = common.spec_by_spec_id("h1_m2_composition")
+    formula = common.build_formula(spec)
+    assert "indirect_clean" in formula
+    assert "relative_window_day" in formula
+    assert "Trauma-Help-Loss" in formula
+    assert "Neutral-Informational" in formula
+    assert "C(topic_id" in formula
+    assert spec.sample_key == "h1"
+    assert "verified" not in formula
+
+
+def test_h1_broader_sample_key():
+    spec = common.spec_by_spec_id("h1_broader_sample")
+    assert spec.sample_key == "h1_broader"
+    assert spec.y_col == "log_engagement"
+    assert "indirect_clean" in common.build_formula(spec)
+
+
+def test_composition_specs_include_h1_m2():
+    ids = {s.default_spec_id for s in common.composition_or_conditional_specs()}
+    assert "h1_m2_composition" in ids
+    assert "h2_m2_composition" in ids
+
+
+def test_legacy_peripheral_maps_to_broader():
+    df = pd.DataFrame(
+        {
+            "include_main": [1, 1],
+            "peripheral": [1, 1],
+            "indirect_clean": [0.0, 1.0],
+            "disaster_impact_related": [1, 0],
+            "sample_h1_eligible": [True, False],
+            "sample_h1_broader_eligible": [True, True],
+            "sample_h2_eligible": [True, False],
+        }
+    )
+    broad = common.apply_sample_mask(df, "peripheral")
+    assert len(broad) == 2
+    core = common.apply_sample_mask(df, "h1")
+    assert len(core) == 1
 
 
 def test_legacy_alias_resolution():

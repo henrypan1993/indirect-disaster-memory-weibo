@@ -35,8 +35,8 @@ MODEL_META: dict[str, dict[str, str]] = {
         "module": "H1",
         "dv_en": "log(Engagement)",
         "dv_zh": "对数互动",
-        "sample_en": "Peripheral subsample",
-        "sample_zh": "边缘子样本",
+        "sample_en": "Disaster-impact ∩ Peripheral",
+        "sample_zh": "灾害影响∩边缘",
         "estimator": "OLS, cluster SE by account",
         "formula_zh": "log_engagement ~ indirect + T2 + controls + topic FE",
     },
@@ -72,7 +72,9 @@ TERM_LABEL: dict[str, dict[str, str]] = {
 }
 
 SPEC_LABEL_ZH: dict[str, str] = {
-    "main": "主结果",
+    "main": "H1-M1 主结果",
+    "h1_m2_composition": "H1-M2 组合调整",
+    "h1_broader_sample": "稳健性：宽边缘样本（不限叙事）",
     "h2_m1_period": "H2-M1 基线",
     "h2_m2_composition": "H2-M2 组合调整",
     "d1_m1_total_association": "D1-M1 总体关联",
@@ -120,6 +122,13 @@ def fmt_coef_cell(coef: float, se: float, p: float, decimals: int = 3) -> str:
 def formula_for_spec(model_id: str, spec_id: str) -> str:
     if spec_id == "without_t2_control" or str(spec_id).endswith("_without_t2"):
         return FORMULA_WITHOUT_T2.get(model_id, MODEL_META.get(model_id, {}).get("formula_zh", ""))
+    if spec_id == "h1_m2_composition":
+        return (
+            "log_engagement ~ indirect + T2 + narrative + emotion "
+            "+ relative_window_day + controls + topic FE"
+        )
+    if spec_id == "h1_broader_sample":
+        return "log_engagement ~ indirect + T2 + controls + topic FE (broader peripheral)"
     if spec_id == "h2_m2_composition":
         return "indirect ~ T2 + narrative + emotion + relative_window_day + controls + topic FE"
     if spec_id == "d1_m2_conditional_threshold":
@@ -158,6 +167,11 @@ def enrich_row(row: pd.Series) -> dict:
     term = row["term"]
     tlab = TERM_LABEL.get(term, {"en": term, "zh": term})
     coef, se, p = float(row["coef"]), float(row["se"]), float(row["pvalue"])
+    sample_en = meta.get("sample_en", "")
+    sample_zh = meta.get("sample_zh", "")
+    if row["spec_id"] == "h1_broader_sample":
+        sample_en = "Broader peripheral (any narrative)"
+        sample_zh = "宽边缘样本（不限叙事）"
     out = {
         "model_id": mid,
         "module": row.get("module", meta.get("module", "")),
@@ -168,8 +182,8 @@ def enrich_row(row: pd.Series) -> dict:
         "predictor_zh": tlab["zh"],
         "dv_en": meta.get("dv_en", ""),
         "dv_zh": meta.get("dv_zh", ""),
-        "sample_en": meta.get("sample_en", ""),
-        "sample_zh": meta.get("sample_zh", ""),
+        "sample_en": sample_en,
+        "sample_zh": sample_zh,
         "estimator": meta.get("estimator", ""),
         "formula_zh": formula_for_spec(mid, row["spec_id"]),
         "n": int(row["n"]),

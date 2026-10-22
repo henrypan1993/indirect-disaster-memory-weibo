@@ -1,4 +1,4 @@
 formal_label,model_id,spec_id,term,coef,se,pvalue,stars,coef_display,or_display,n
-H1,h1_engagement_indirect,main,indirect_clean,0.1322504696495472,0.0293953181788499,6.826366440515378e-06,***,0.132*** (0.029),,10806
+H1,h1_engagement_indirect,main,indirect_clean,0.1230280911155136,0.0350437542670538,0.0004469292821508,***,0.123*** (0.035),,5846
 H2,h2_indirect_period,h2_m1_period,t2,0.6507295138349334,0.0954948997095184,9.473338169678619e-12,***,0.651*** (0.095),1.92,5846
 D1,d1_indirect_peripheral,d1_m1_total_association,peripheral,0.7940392197505444,0.082033770687156,3.688066953548333e-22,***,0.794*** (0.082),2.21,17067

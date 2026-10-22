@@ -1,0 +1,5 @@
+contrast,hypothesis,stat_type,stat,df_num,df_denom,df_display,pvalue,stars
+joint_equality,beta_likes = beta_comments = beta_reposts,F,7.146065845853184,2.0,5475.0,"F(2, 5475)",0.000795328854104196,***
+likes_vs_reposts,beta_likes - beta_reposts = 0,F,14.069012882831748,1.0,5475.0,"F(1, 5475)",0.00017804370095399083,***
+comments_vs_reposts,beta_comments - beta_reposts = 0,F,6.229719372264926,1.0,5475.0,"F(1, 5475)",0.012591557216552715,*
+likes_vs_comments,beta_likes - beta_comments = 0,F,3.4564952320053313,1.0,5475.0,"F(1, 5475)",0.06305733717252832,
